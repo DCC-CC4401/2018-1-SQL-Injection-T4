@@ -1,0 +1,55 @@
+{% extends 'application_layout.html' %}
+
+{% block title %}
+  Panel de Administración | Usuarios
+{% endblock %}
+
+{% block body %}
+<div class="container">
+<div class="row">
+  {% include '_sidebar.html' %}
+	<div class="col-md-10 admin-table-container">
+    <h1>Administración de Usuarios</h1>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellido</th>
+        <th scope="col">Rut</th>
+        <th scope="col">Correo</th>
+        <th scope="col">Estado</th>
+        <th scope="col" class="center-column">
+          <a href="#" class="table-button add-button">
+            <i class="fas fa-plus-circle"></i>
+          </a>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.rut }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          {% if user.enabled %}
+          Habilitado
+          {% else %}
+          No Habilitado
+          {% endif %}
+        </td>
+        <td class="center-column">
+          <a class="table-button" href="#"><i class="fas fa-edit"></i></a>
+          <a class="table-button" href="#"><i class="fas fa-trash"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+	</div>
+</div>
+</div>
+{% endblock %}

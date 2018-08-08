@@ -1,0 +1,261 @@
+{% extends 'application_layout.html' %}
+
+{% load static %}
+
+{% block title %}
+    Perfil de usuario
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <p></p>
+
+        <!--Botones de reservar espacio y pedir artículos-->
+        <div class="row">
+            <div class="col-xl-6 text-xs-center">
+                <div class="card mb-3">
+                    <a role="button" class="btn btn-light btn-lg btn-block" href="{% url 'landing_spaces' %}">
+                        Reserva tu espacio</a>
+                </div>
+            </div>
+            <div class="col-xl-6 text-xs-center">
+                <div class="card mb-3">
+                    <a role="button" class="btn btn-light btn-lg btn-block" href="{% url 'landing_articles' %}">
+                        Pide tu artículo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <br>
+            <!-- Nav pills Reservas y Préstamos-->
+            <div class="col-md-12 text-xs-center">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="pill" href="#reservas">Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-light" data-toggle="pill" href="#prestamos">Préstamos</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contenido de las Reservas y Préstamos-->
+            <div class="tab-content col-md-12">
+
+                <!-- Contenido de reservas-->
+                <div id="reservas" class="container tab-pane active"><br>
+                    {% if reservations %}
+                        <div class="row">
+
+                        <!-- Checkbox, Nombre, Estado-->
+                        <div class="col-md-3">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                 aria-orientation="vertical">
+                                <form method="post" action="{% url 'delete_reservation' %}">
+                                    {% csrf_token %}
+                                    <input class="delete-button" type="submit" value="Eliminar Reservas">
+                                    <br>
+                                    {% for reservation in reservations %}
+                                        <!-- Casilla solo en los pendientes -->
+                                        {% if reservation.state == 'P' %}
+                                            <input id="reservation-{{ reservation.id }}" name="reservation" class="form-check-input"
+                                                   type="checkbox" value="{{ reservation.id }}">
+                                        {% endif %}
+                                        <label for="reservation-{{ reservation.id }}">
+                                            {{ reservation.space.name }} <span
+                                                class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
+                                        </label>
+                                      <br>
+                                    {% endfor %}
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
+                        <div class="col-md-7 offset-1">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="row">
+                                {% for reservation in reservations %}
+                                    <div class="col-md-6">
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <div class="tab-pane fade show active" id="v-pills-{{ reservation.pk }}"
+                                                 role="tabpanel"
+                                                 aria-labelledby="v-pills-{{ reservation.pk }}-tab">
+
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h2 class="mb-1">{{ reservation.space.name }}</h2>
+                                            <medium><strong>{{ reservation.starting_date_time }}</strong></medium>
+                                        </div>
+                                        <medium class="text-muted">{{ reservation.get_state_display }}</medium>
+
+                                        <!-- Imagen de las reservas-->
+                                        {% if reservation.space.image %}
+                                            <img src=" {% static reservation.space.image.url %}" class="img-fluid"
+
+                                                 alt="Foto"/>
+                                        {% else %}
+                                            <img class="card-img-top img-fluid"
+                                                 src="{% static 'img/items/default_article.jpg' %}"
+                                                 alt="Card image cap">
+                                        {% endif %}
+
+
+                                        <p>{{ reservation.space.description }}</p>
+
+                                        <div class="reservation-timeline">
+                                            <div class="container_timeline right">
+                                                <div class="content">
+                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
+                                                        en proceso
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="container_timeline right">
+                                                <div class="content">
+                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
+                                                        en Enviado
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="container_timeline right">
+                                                <div class="content">
+                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
+                                                        enviada</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                                </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    {% else %}
+                        <p>No se han realizado reservas</p>
+                    {% endif %}
+                    </div>
+
+                    <!-- Contenido de préstamos-->
+                    <div id="prestamos" class="container tab-pane fade"><br>
+                        {% if loans %}
+
+                            <div class="row">
+
+                                <!-- Nombre, Estado-->
+                                <div class="col-lg-3">
+                                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                         aria-orientation="vertical">
+
+                                        {% for loan in loans %}
+
+                                            <!-- Tener seleccionado la primera casilla por default-->
+
+                                            <a class="nav-link {% if forloop.counter0 == 0 %} active {% endif %}
+                                         d-flex justify-content-between align-items-center"
+                                               id="v-pills-{{ loan.pk }}-tab" data-toggle="pill"
+                                               href="#v-pills-{{ loan.pk }}"
+                                               role="tab" aria-controls="v-pills-{{ loan.pk }}" aria-selected="false">
+                                                {{ loan.article.name }} <span
+                                                    class="badge badge-pill badge-light">{{ loan.get_state_display }}</span></a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
+                                <div class="col-lg-9">
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <div class="tab-content" id="v-pills-tabContent">
+
+                                                {% for loan in loans %}
+
+                                                    <div class="tab-pane fade show {% if forloop.counter0 == 0 %}
+                                                    active {% endif %}"
+                                                         id="v-pills-{{ loan.pk }}"
+                                                         role="tabpanel"
+                                                         aria-labelledby="v-pills-{{ loan.pk }}-tab">
+
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h2 class="mb-1">{{ loan.article.name }}</h2>
+                                                            <medium><strong>{{ loan.starting_date_time }}</strong>
+                                                            </medium>
+                                                        </div>
+                                                        <medium class="text-muted">{{ loan.get_state_display }}</medium>
+
+                                                        <!-- Imagen de los préstamos-->
+                                                        {% if loan.article.image %}
+                                                            <img src=" {% static loan.article.image.url %}"
+                                                                 class="img-fluid"
+                                                                 alt="Foto"
+                                                                 style="height: 900px"/>
+                                                        {% else %}
+                                                            <img class="card-img-top img-fluid"
+                                                                 src="{% static 'img/items/default_article.jpg' %}"
+                                                                 alt="Card image cap">
+                                                        {% endif %}
+
+                                                        <p>{{ loan.article.description }}</p>
+
+                                                        <div class="reservation-timeline">
+                                                            <div class="container_timeline right">
+                                                                <div class="content">
+                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
+                                                                        Solicitud en
+                                                                        proceso
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="container_timeline right">
+                                                                <div class="content">
+                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
+                                                                        Solicitud en
+                                                                        Enviado
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="container_timeline right">
+                                                                <div class="content">
+                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
+                                                                        Solicitud
+                                                                        enviada</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        {% else %}
+                            <p>No se han realizado préstamos</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+{% endblock %}

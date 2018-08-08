@@ -1,0 +1,38 @@
+{% extends 'application_layout.html' %}
+
+{% block title %}
+Sistema de Reserva CEI - Ver Espacios
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4" style="text-align: center;">
+            <div style="margin:0; padding:0; width: auto;" class="btn-group" role="group" aria-label="Basic example">
+                <a href="{% url 'landing_articles' %}"  class="btn btn-light" role="button" aria-disabled="false">Artículos</a>
+                <a href="" class="btn btn-success disabled" role="button" aria-disabled="true">Espacios</a>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <div class="row" style="margin-top: 2em;">
+        <div class="col-6 offset-3 schedule-current-week" style="text-align: center;">
+          <div class="alert alert-info">
+            <p>Estás viendo la semana del lunes <b>{{ actual_monday }}</b></p>
+          </div>
+        </div>
+    </div>
+{% include '_schedule_landing.html' %}
+
+
+
+</div>
+
+
+
+{% endblock %}
+
+
