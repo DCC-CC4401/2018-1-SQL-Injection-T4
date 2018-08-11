@@ -134,3 +134,14 @@ def article_edit_description(request, article_id):
         a.save()
 
     return redirect('/article/' + str(article_id) + '/edit')
+
+
+@login_required
+def article_edit_state(request, article_id):
+    if request.method == "POST" \
+		    and request.POST["state"] in ['D', 'P', 'R', 'L']:
+        a = Article.objects.get(id=article_id)
+        a.state = request.POST["state"]
+        a.save()
+
+    return redirect('/article/' + str(article_id) + '/edit')

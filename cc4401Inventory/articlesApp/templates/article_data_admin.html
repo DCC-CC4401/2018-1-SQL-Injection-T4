@@ -28,6 +28,9 @@
           {% elif article.state == "R" %}
             <span class="badge badge-pill badge-warning"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
           {% endif %}
+      <button type="button" class="btn btn-light" data-toggle="modal" data-target="#editState">
+            <i class="fas fa-edit"></i>
+      </button>
       </h1>
       </div>
 
@@ -81,6 +84,34 @@
             </form>
         </div>
       </div>
+    </div>
+
+
+    <!-- Estado -->
+    <div class="modal fade" id="editState" tabindex="-1" role="dialog" aria-labelledby="editStateLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStateLabel">Editar Estado del Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="edit_state" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <select id="stateSelect" name="state">
+                            <option value="D">Disponible</option>
+                            <option value="P">En Préstamo</option>
+                            <option value="R">En Reparación</option>
+                            <option value="L">Perdido</option>
+                        </select>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 
