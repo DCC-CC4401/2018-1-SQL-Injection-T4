@@ -10,6 +10,7 @@ from loansApp.models import Loan
 
 
 def login_view(request):
+
     context = {}
     if request.user.is_authenticated:
         if request.user.is_staff:
@@ -25,7 +26,6 @@ def login_view(request):
 
 # se llama cuando se envia el formulario de login
 def login_submit(request):
-
     username = request.POST['email']
     password = request.POST['password']
     user = authenticate(request, username=username, password=password)
@@ -33,9 +33,13 @@ def login_submit(request):
 
     if user is not None:
         login(request, user)
-        return redirect('/articles/')
+        if request.user.is_staff:
+            return redirect('/admin')
+        else:
+            return redirect('/articles')
     else:
-        messages.warning(request, 'La contraseña ingresada no es correcta o el usuario no existe')
+        messages.warning(request,
+                         'La contraseña ingresada no es correcta o el usuario no existe')
         return redirect('/user/login')
 
 
@@ -49,7 +53,6 @@ def signup(request):
 
 # se llama cuando se manda el formulario de creacion de cuentas
 def signup_submit(request):
-
     context = {'error_message': '', }
 
     if request.method == 'POST':
@@ -59,16 +62,19 @@ def signup_submit(request):
         password = request.POST['password']
         rut = request.POST['RUT']
 
-        if User.objects.filter(email = email).exists():
+        if User.objects.filter(email=email).exists():
             messages.warning(request, 'Ya existe una cuenta con ese correo.')
             return redirect('/user/signup/')
-        elif User.objects.filter(rut = rut).exists():
+        elif User.objects.filter(rut=rut).exists():
             messages.warning(request, 'Ya existe una cuenta con ese rut')
             return redirect('/user/signup/')
         else:
-            user = User.objects.create_user(first_name=first_name, email=email, password=password, rut = rut)
+            user = User.objects.create_user(first_name=first_name,
+                                            last_name=last_name, email=email,
+                                            password=password, rut=rut)
             login(request, user)
-            messages.success(request, 'Bienvenid@, ' + user.first_name + ' ya puedes comenzar a hacer reservas :)')
+            messages.success(request,
+                             'Bienvenid@, ' + user.first_name + ' ya puedes comenzar a hacer reservas :)')
             return redirect('/articles/')
 
 
@@ -82,8 +88,10 @@ def logout_view(request):
 def user_data(request, user_id):
     try:
         user = User.objects.get(id=user_id)
-        reservations = Reservation.objects.filter(user = user_id).order_by('-starting_date_time')[:10]
-        loans = Loan.objects.filter(user = user_id).order_by('-starting_date_time')[:10]
+        reservations = Reservation.objects.filter(user=user_id).order_by(
+            '-starting_date_time')[:10]
+        loans = Loan.objects.filter(user=user_id).order_by(
+            '-starting_date_time')[:10]
         context = {
             'user': user,
             'reservations': reservations,
