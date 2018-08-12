@@ -2,7 +2,7 @@
 <head>
     <link rel="stylesheet" href="{% static 'mainApp/css/schedule_reset.css' %}"> <!-- CSS reset -->
 </head>
-<div class="cd-schedule loading">
+<div class="cd-schedule loading" style="overflow: hidden">
 	<div class="timeline" id="timeline">
 		<ul>
 			<li><span>09:00</span></li>
@@ -159,6 +159,7 @@
 
 	<div class="cover-layer"></div>
 </div> <!-- .cd-schedule -->
+
 <script src="{% static 'js/modernizr.js' %}"></script>
 <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
 
