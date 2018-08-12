@@ -12,8 +12,10 @@ from loansApp.models import Loan
 def login_view(request):
     context = {}
     if request.user.is_authenticated:
-        # TODO: replace users 
-        return redirect('/articles')
+        if request.user.is_staff:
+            return redirect('/admin')
+        else:
+            return redirect('/articles')
 
     if request.method == 'GET':
         return render(request, 'usersApp/login.html', context=context)
