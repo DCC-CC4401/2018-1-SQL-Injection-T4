@@ -9,3 +9,7 @@ class Space(Item):
         ('R', 'En reparación')
     )
     state = models.CharField(max_length=1, choices=STATES)
+
+    class Meta:
+        verbose_name_plural = "Espacios"
+        ordering = ['pk']
