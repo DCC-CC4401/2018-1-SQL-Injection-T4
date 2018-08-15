@@ -315,6 +315,7 @@ Main Components
 }
 
 .cd-schedule .event-name,
+.cd-schedule .event-state,
 .cd-schedule .event-date {
   display: block;
   color: white;
@@ -340,6 +341,15 @@ Main Components
   line-height: 1.2;
   /*margin-bottom: .2em;*/
 }
+
+.cd-schedule .event-state {
+  /* they are not included in the the HTML but added using JavScript */
+  font-size: 0.7rem;
+  opacity: .7;
+  line-height: 1.2;
+  /*margin-bottom: .2em;*/
+}
+
 
 .cd-schedule .single-event[data-event="event-1"],
 .cd-schedule [data-event="event-1"] .header-bg {

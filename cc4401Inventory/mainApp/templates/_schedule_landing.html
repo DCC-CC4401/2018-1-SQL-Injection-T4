@@ -2,7 +2,7 @@
 <head>
     <link rel="stylesheet" href="{% static 'mainApp/css/schedule_reset.css' %}"> <!-- CSS reset -->
 </head>
-<div class="cd-schedule loading" style="overflow: hidden">
+<div class="cd-schedule loading" >
 	<div class="timeline" id="timeline">
 		<ul>
 			<li><span>09:00</span></li>
@@ -29,7 +29,7 @@
 	<div id="line-container" class="line-container">
 	<div id="line" class="clock"></div><div class="message" id="message"></div>
 		</div>
-	<div class="events" id="events">
+	<div class="events" id="events" style="overflow: hidden">
 		<ul>
 			<li class="events-group">
 				<div class="top-info"><span>Lunes</span></div>
@@ -40,6 +40,7 @@
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
 						<a href="">
 							<em class="event-name">{{r.0}}</em>
+							<em class="event-state">{{r.4}}</em>
 						</a>
 					</li>
 
@@ -58,6 +59,7 @@
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
 						<a href="">
 							<em class="event-name">{{r.0}}</em>
+							<em class="event-state">{{r.4}}</em>
 						</a>
 					</li>
 
@@ -74,6 +76,7 @@
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}" >
 						<a href="">
 							<em class="event-name">{{r.0}}</em>
+							<em class="event-state">{{r.4}}</em>
 						</a>
 					</li>
 
@@ -90,6 +93,7 @@
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}"  bgcolor="{{r.3}}">
 						<a href="">
 							<em class="event-name">{{r.0}}</em>
+							<em class="event-state">{{r.4}}</em>
 						</a>
 					</li>
 
@@ -106,6 +110,7 @@
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
 						<a href="">
 							<em class="event-name">{{r.0}}</em>
+							<em class="event-state">{{r.4}}</em>
 						</a>
 					</li>
 
