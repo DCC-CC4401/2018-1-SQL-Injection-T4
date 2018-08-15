@@ -5,3 +5,7 @@ from django.db import models
 
 class Reservation(Action):
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Reservas"
+        ordering = ['pk']

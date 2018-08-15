@@ -54,8 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        verbose_name_plural = 'Usuarios'
+        ordering = ['pk']
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
