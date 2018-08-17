@@ -111,7 +111,19 @@ def modify_reservations(request):
     return redirect('/admin/actions-panel')
 
 
-# building queries 
+def remove_article(request):
+    if request.method == "POST":
+        artId = request.POST["article_id"]
+        art = Article.objects.get(id=artId)
+        art.delete()
+    
+    return redirect('/admin/items-panel')
+    
+
+
+############################################
+########### building queries ###########
+############################################
 def queryCalendarData(current_week):
     current_week_reservations = Reservation.objects.filter(
         starting_date_time__week=current_week)
@@ -134,7 +146,7 @@ def queryCalendarData(current_week):
         reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
         reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
         reserv.append(colores_resv[r.state])
-        reserv.append(r.get_state_display)
+        reserv.append(r.get_state_display())
         res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
 
     current_week_loans = Loan.objects.filter(
