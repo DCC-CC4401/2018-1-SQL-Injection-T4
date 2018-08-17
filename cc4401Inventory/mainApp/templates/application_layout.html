@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="{% static 'adminApp/css/admin.css' %}">
   <link rel="stylesheet" href="{% static 'articlesApp/css/article.css' %}">
   <link rel="stylesheet" href="{% static 'usersApp/css/user_profile.css' %}">
+  
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
   <meta charset="UTF-8">
   <title>{% block title %}{% endblock %}</title>
 </head>
@@ -32,7 +35,6 @@
     {% block body %}
     {% endblock %}
   </div>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   {% bootstrap_javascript %}
 </body>
 </html>

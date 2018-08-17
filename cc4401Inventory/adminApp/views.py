@@ -111,7 +111,19 @@ def modify_reservations(request):
     return redirect('/admin/actions-panel')
 
 
-# building queries 
+def remove_article(request):
+    if request.method == "POST":
+        artId = request.POST["article_id"]
+        art = Article.objects.get(id=artId)
+        art.delete()
+    
+    return redirect('/admin/items-panel')
+    
+
+
+############################################
+########### building queries ###########
+############################################
 def queryCalendarData(current_week):
     current_week_reservations = Reservation.objects.filter(
         starting_date_time__week=current_week)
