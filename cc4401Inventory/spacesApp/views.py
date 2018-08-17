@@ -17,28 +17,6 @@ from django.contrib import messages
 def space_data(request, space_id, date=None):
 	try:
 		space = Space.objects.get(id=space_id)
-
-		last_reservations = Reservation.objects.filter(space=space,
-		                                               ending_date_time__lt=datetime.datetime.now(
-			                                               tz=pytz.utc)
-		                                               ).order_by(
-			'-ending_date_time')[:10]
-
-		reservation_list = list()
-		for reservation in last_reservations:
-
-			starting_day = reservation.starting_date_time.strftime("%d-%m-%Y")
-			ending_day = reservation.ending_date_time.strftime("%d-%m-%Y")
-			starting_hour = reservation.starting_date_time.strftime("%H:%M")
-			ending_hour = reservation.ending_date_time.strftime("%H:%M")
-
-			if starting_day == ending_day:
-				reservation_list.append(
-					starting_day + " " + starting_hour + " a " + ending_hour)
-			else:
-				reservation_list.append(
-					starting_day + ", " + starting_hour + " a " + ending_day + ", " + ending_hour)
-
 		if date:
 			current_date = date
 			current_week = datetime.datetime.strptime(current_date,
@@ -91,7 +69,6 @@ def space_data(request, space_id, date=None):
 
 		context = {
 			'space': space,
-			'last_reservations': reservation_list,
 			'actual_monday': monday,
 			'controls': move_controls,
 			'reservations': res_list,

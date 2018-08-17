@@ -3,15 +3,14 @@
 {% load static %}
 
 {% block title %}
-    Ficha del espacio: {{ space.name }}
+    {{ space.name }}
 {% endblock %}
 
 {% block body %}
-
     <div class="row">
-        <div class="col-md-4 offset-1">
+        <div class="col-md-8 offset-1">
 
-            <div class="row">
+            <div class="row" style="padding: 10px;">
                 <h1 class="space-name">
                     {{ space.name }}
                     {% if space.state == "D" %}
@@ -31,13 +30,12 @@
             </div>
             {% if space.image %}
                 <img src=" {% static space.image.url %}" class="img-fluid"
-                     alt="Foto" style="height: 400px"/>
+                     alt="Foto" style="width: inherit"/>
             {% else %}
                 <img class="card-img-top"
                      src="{% static 'img/items/default_space.jpg' %}"
                      alt="Card image cap">
             {% endif %}
-
             <div class="card">
                 <div class="card-header space-description-title">Descripción
                 </div>
@@ -45,10 +43,9 @@
                     <p class="card-text">{{ space.description }}</p>
                 </div>
             </div>
-        </div>
     </div>
     <div class="container">
-            <div class="row" style="margin-top: 2em;">
+        <div class="row" style="margin-top: 2em;">
             <div class="col-6 offset-3 schedule-current-week"
                  style="text-align: center;">
                 <div class="alert alert-info">
@@ -61,5 +58,4 @@
     </div>
     {% include '_schedule_landing.html' %}
     </div>
-
 {% endblock %}
