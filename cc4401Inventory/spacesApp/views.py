@@ -5,6 +5,8 @@ from reservationsApp.models import Reservation
 from django.db import models
 from datetime import timedelta
 import datetime
+from django.utils.timezone import localtime
+
 
 import random, os
 import pytz
@@ -71,11 +73,28 @@ def space_data(request, space_id, date=None):
 		                                                 "%Y-%m-%d") + datetime.timedelta(
 			weeks=4)).strftime("%Y-%m-%d"))
 
+		colores = {'A': 'rgba(0,153,0,0.7)',
+		           'P': 'rgba(51,51,204,0.7)'}
+		reservations = Reservation.objects.filter(
+			starting_date_time__week=current_week, state__in=['P', 'A'])
+		res_list = []
+		for i in range(5):
+			res_list.append(list())
+		for r in reservations:
+			print(r)
+			reserv = []
+			reserv.append(r.space.name)
+			reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
+			reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
+			reserv.append(colores[r.state])
+			res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
+
 		context = {
 			'space': space,
 			'last_reservations': reservation_list,
 			'actual_monday': monday,
 			'controls': move_controls,
+			'reservations': res_list,
 		}
 
 		return render(request, 'space_data.html', context)
@@ -119,7 +138,7 @@ def space_request(request):
 					                 'Los pedidos deben ser devueltos el mismo día que se entregan.')
 				elif not verificar_horario_habil(
 						start_date_time) and not verificar_horario_habil(
-						end_date_time):
+					end_date_time):
 					messages.warning(request,
 					                 'Los pedidos deben ser hechos en horario hábil.')
 				else:
