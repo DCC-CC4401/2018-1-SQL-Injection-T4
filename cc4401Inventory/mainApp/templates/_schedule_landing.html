@@ -1,4 +1,5 @@
 {% load static %}
+
 <head>
     <link rel="stylesheet" href="{% static 'mainApp/css/schedule_reset.css' %}"> <!-- CSS reset -->
 </head>
@@ -31,12 +32,16 @@
 		</div>
 	<div class="events" id="events" style="overflow: hidden">
 		<ul>
+			{% with name="Lunes Martes Miercoles Jueves Viernes" bb="a b c d e"%}
+
+			{% for res, day in reservations|zipWith:name.split %}
 			<li class="events-group">
-				<div class="top-info"><span>Lunes</span></div>
+
+				<div class="top-info"><span>{{day}} </span></div>
 
 				<ul>
-					{% for r in reservations.0 %}
-
+					{% for r in res %} 
+					
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
 						<a href="">
 							<em class="event-name">{{r.0}}</em>
@@ -44,79 +49,14 @@
 						</a>
 					</li>
 
-					{% endfor%}
+					{% endfor %}
 
 				</ul>
+				
 			</li>
+			{% endfor%}
+			{% endwith %}
 
-			<li class="events-group">
-				<div class="top-info"><span>Martes</span></div>
-
-				<ul>
-
-					{% for r in reservations.1 %}
-
-					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
-						<a href="">
-							<em class="event-name">{{r.0}}</em>
-							<em class="event-state">{{r.4}}</em>
-						</a>
-					</li>
-
-					{% endfor%}
-				</ul>
-			</li>
-
-			<li class="events-group">
-				<div class="top-info"><span>Miércoles</span></div>
-
-				<ul>
-					{% for r in reservations.2 %}
-
-					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}" >
-						<a href="">
-							<em class="event-name">{{r.0}}</em>
-							<em class="event-state">{{r.4}}</em>
-						</a>
-					</li>
-
-					{% endfor%}
-				</ul>
-			</li>
-
-			<li class="events-group">
-				<div class="top-info"><span>Jueves</span></div>
-
-				<ul>
-					{% for r in reservations.3 %}
-
-					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}"  bgcolor="{{r.3}}">
-						<a href="">
-							<em class="event-name">{{r.0}}</em>
-							<em class="event-state">{{r.4}}</em>
-						</a>
-					</li>
-
-					{% endfor%}
-				</ul>
-			</li>
-
-			<li class="events-group">
-				<div class="top-info"><span>Viernes</span></div>
-
-				<ul>
-					{% for r in reservations.4 %}
-
-					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
-						<a href="">
-							<em class="event-name">{{r.0}}</em>
-							<em class="event-state">{{r.4}}</em>
-						</a>
-					</li>
-
-					{% endfor%}
-				</ul>
-			</li>
 		</ul>
 
 	</div>
@@ -169,3 +109,9 @@
 <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
 
 <script src="{% static 'js/main.js' %}"></script> <!-- Resource jQuery -->
+
+<script>
+	$(document).ready(function(){
+		
+	})
+</script>
