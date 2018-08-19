@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:article_id>/edit_image', views.article_edit_image, name='article_edit_image'),
     path('<int:article_id>/edit_description', views.article_edit_description, name='article_edit_description'),
     path('request', views.article_request, name='article_request'),
+    path('create', views.article_data_admin_create, name='article_data_admin_create'),
 ]

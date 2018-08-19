@@ -1,0 +1,99 @@
+
+{% extends 'application_layout.html' %}
+
+{% load static %}
+
+{% block title %}
+Crear Artículo: {{ article.name }}
+{% endblock %}
+
+{% block body %}
+<div class = "container" style="margin-top: 20px">
+    {% if error %}
+      <div class="alert alert-danger">
+        <strong>Error!</strong>{{error}}
+      </div>
+    {% endif %}
+  <div class="row">
+  <div class="col-md-2">
+    
+  </div>
+    <div class="col-md-8">
+
+      <form id="art-form" action="create" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="input-name">Nombre de Artículo</label>
+          <input name="name" type="input" class="form-control" id="input-name" placeholder="Nombre de Artículo">
+          <small id="emailHelp" class="form-text text-muted">Este campo no puede ser vacio.</small>
+        </div>
+        <div class="form-group">
+          <label for="art-state">Estado</label>
+          <select name="state" class="custom-select" >
+            {% for k, s in states %}
+              <option value="{{k}}" selected>{{s}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-file">Imagen</label>
+          <input name="image" type="file" class="form-control" id="input-img" placeholder="Imagen">
+          <small id="emailHelp" class="form-text text-muted">Este campo no puede ser vacio.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="input-desc">Descripción</label>
+          <!-- <input type="textarea" class="form-control" id="input-desc" rows="3" placeholder="Descripción"> -->
+          <textarea name="description" class="form-control" id="input-desc" rows="3"></textarea>
+        </div>
+
+        <button id="art-create-button" type="submit" class="btn btn-primary" >Guardar</button>
+      </form>      
+
+  <div class="col-md-2">
+  </div>
+  </div>
+</div>
+</div>
+<script>
+  $(document).ready(function(){
+    $( "#art-form" ).submit(function( event ) {
+      var validations = 2
+      var name = $("#input-name");
+      var img = $("#input-img");
+      if(name.val() == ""){
+        name.addClass("is-invalid")
+        validations = validations - 1 
+      }
+      if(img.val() == ""){
+        img.addClass("is-invalid")
+        validations = validations - 1 
+      }
+      if (validations<2)
+        event.preventDefault();
+    });
+    // $("#art-create-button").on('click',function(ev){
+    //   console.log(123123)
+    //   var name = $("#input-name");
+    //   var img = $("#input-img");
+    //   if(name.val() == ""){
+    //     name.addClass("is-invalid")
+    //   }
+    //   if(img.val() == ""){
+    //     img.addClass("is-invalid")
+    //   }
+    // })
+    // $("#art-form input").change(function (){
+    //     var name = $("#input-name").val();
+    //     var img = $("#input-img").val();
+        
+    //     if(name == "" || img == "")
+    //       $("button[type='submit']").attr("disabled", "disabled");
+    //     else 
+    //       $("button[type='submit']").removeAttr("disabled");
+    //  });
+  })
+</script>
+{% endblock %}
+
