@@ -72,6 +72,8 @@
             </div>
           </form>
       </div>
+        <form action="{% url 'modify_loans' %}" method="post">
+        {% csrf_token %}
         <table id="loans-table" class="table table-striped">
           <thead>
           <tr>
@@ -79,7 +81,9 @@
             <th scope="col">Nombre del Espacio</th>
             <th scope="col">Usuario</th>
             <th scope="col">Fecha de Prestamo</th>
-              <th scope="col">Estado</th>
+            <th scope="col">Estado de Articulo</th>
+            <th scope="col">Estado de Prestamo</th>
+            <th scope="col">Seleccionar</th>
           </tr>
           </thead>
           <tbody>
@@ -89,11 +93,18 @@
             <td>{{ loan.article.name }}</td>
             <td>{{ loan.user.get_full_name }}</td>
             <td>{{ loan.starting_date_time }}</td>
-          <td>{{ loan.get_state_display }}</td>
+            <td>{{ loan.article.get_state_display }}</td>
+            <td>{{ loan.get_state_display }}</td>
+            <td><input type="checkbox" name="selected" value="{{ loan.id }}"></td>
           </tr>
           {% endfor %}
           </tbody>
         </table>
+        <div class="row">
+          <button class="reserv_input" name="returned" value="1" type="submit">Marcar como Recibidos</button>
+          <button class="reserv_input" name="returned" value="0" type="submit">Marcar como Perdido</button>
+        </div>
+        </form>
       </div>
     </div>
   </div>

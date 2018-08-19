@@ -110,6 +110,29 @@ def modify_reservations(request):
 
     return redirect('/admin/actions-panel')
 
+def modify_loans(request):
+    user = request.user
+    if not (user.is_superuser and user.is_staff):
+        return redirect('/')
+
+    if "selected" not in request.POST:
+        return redirect('/admin/actions-panel')
+    
+    if request.method == "POST":
+
+        loans = Loan.objects.filter(id__in=request.POST.getlist("selected"))
+
+        if request.POST["returned"] == "1":
+            for loan in loans:
+                loan.article.state = 'D'
+                loan.article.save()
+        else:
+            for loan in loans:
+                loan.article.state = 'L'
+                loan.article.save()
+
+
+    return redirect('/admin/actions-panel')
 
 def remove_article(request):
     if request.method == "POST":
