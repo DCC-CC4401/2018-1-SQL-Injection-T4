@@ -109,6 +109,7 @@ def article_data_admin(request, article_id):
 def article_data_admin_create(request):
     if not request.user.is_staff:
         return redirect('/')
+
     if request.method == "GET":
         context = {"states" : Article.STATES}
         return render(request, 'article_data_admin_create.html', context)
@@ -116,11 +117,12 @@ def article_data_admin_create(request):
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            return redirect('/admin/items-panel')
         else:
             context = {"states" : Article.STATES, "error": "Datos no validos, porfavor intente otra vez"}
-            return render(request, 'article_data_admin_create.html', context)
+            return redirect('/admin/items-panel')
 
-    return redirect('/')
+    
 
 @login_required
 def article_edit_name(request, article_id):
