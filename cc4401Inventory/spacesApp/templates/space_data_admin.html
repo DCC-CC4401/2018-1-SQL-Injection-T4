@@ -1,103 +1,130 @@
-
 {% extends 'application_layout.html' %}
 
 {% load static %}
 
 {% block title %}
- Editando espacio: {{ space.name }}
+    Editando espacio: {{ space.name }}
 {% endblock %}
 
 
 {% block body %}
-<div class = "container" style="margin-top: 20px">
-  <div class="row">
-  <div class="col-md-2">
-  </div>
-    <div class="col-md-8">
 
-      <div class="row"><h1> {{ space.name }}<!-- Button trigger modal -->
-<button type="button" class="btn btn-light" data-toggle="modal" data-target="#editName">
-  <i class="fas fa-edit"></i>
-</button>
-        {% if space.state == "D" %}
-            <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
-          {% elif space.state == "P" %}
-            <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
-          {% elif space.state == "L" %}
-            <span class="badge badge-pill badge-danger"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
-          {% elif space.state == "R" %}
-            <span class="badge badge-pill badge-warning"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
-          {% endif %}
-      <button type="button" class="btn btn-light" data-toggle="modal" data-target="#editState">
-            <i class="fas fa-edit"></i>
-      </button>
-      </h1>
-      </div>
+    <div class="row">
+        <div class="col-md-8 offset-1">
 
-      <div>
-          {% if space.image %}
-            <img src= " {% static space.image.url %}" class="img-fluid" alt="Foto" style="height: 400px" />
-        {% else %}
-            <img class="card-img-top" src="{% static 'img/items/default_space.jpg' %}" alt="Card image cap">
-        {% endif %}
-          <button type="button" class="btn btn-light" data-toggle="modal" data-target="#editImage">
-            <i class="fas fa-edit"></i>
-      </button></div>
-      <div style="margin-bottom: 30px">
-          <div style ="border:1px dashed darkgrey;border-radius: 5px;padding: 5px;height:120px;width:calc(100% - 60px); display: inline-block; overflow: scroll;">{{ space.description }}</div>
-          <button type="button" class="btn btn-light" data-toggle="modal" data-target="#editDescription" style="margin-bottom:1.6rem">
-              <i class="fas fa-edit"></i>
-          </button>
-      </div>
+            <div class="row" style="padding: 10px">
+                <h1> {{ space.name }}<!-- Button trigger modal -->
+                    <button type="button" class="btn btn-light"
+                            data-toggle="modal" data-target="#editName">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    {% if space.state == "D" %}
+                        <span class="badge badge-pill badge-success"><i
+                                class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                    {% elif space.state == "P" %}
+                        <span class="badge badge-pill badge-primary"><i
+                                class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                    {% elif space.state == "L" %}
+                        <span class="badge badge-pill badge-danger"><i
+                                class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                    {% elif space.state == "R" %}
+                        <span class="badge badge-pill badge-warning"><i
+                                class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                    {% endif %}
+                    <button type="button" class="btn btn-light"
+                            data-toggle="modal" data-target="#editState">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    Capacidad: {{ space.capacity }}
+                    <button type="button" class="btn btn-light"
+                            data-toggle="modal" data-target="#editCapacity">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </h1>
+            </div>
+
+            <div>
+                {% if space.image %}
+                    <img src=" {% static space.image.url %}" class="img-fluid"
+                         alt="Foto" style="height: 400px"/>
+                {% else %}
+                    <img class="card-img-top"
+                         src="{% static 'img/items/default_space.jpg' %}"
+                         alt="Card image cap">
+                {% endif %}
+                <button type="button" class="btn btn-light" data-toggle="modal"
+                        data-target="#editImage">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div style="margin-bottom: 30px">
+                <div style="border:1px dashed darkgrey;border-radius: 5px;padding: 5px;height:120px;width:calc(100% - 60px); display: inline-block; overflow: scroll;">{{ space.description }}</div>
+                <button type="button" class="btn btn-light" data-toggle="modal"
+                        data-target="#editDescription"
+                        style="margin-bottom:1.6rem">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-2">
+        </div>
+
+
     </div>
-  <div class="col-md-2">
-  </div>
-
-
-
-  </div>
 
 
 
     <!---  MODALES PARA EDICION DE LOS CAMPOS --->
 
 
-        <!-- Nombre -->
-    <div class="modal fade" id="editName" tabindex="-1" role="dialog" aria-labelledby="editNameLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editNameLabel">Editar Nombre del Artículo</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-            <form action="edit_name" method="post">
-                {% csrf_token %}
-          <div class="modal-body">
-            <input name="name" class="form-control" type="text" placeholder="Ingrese Nombre">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-          </div>
-            </form>
+    <!-- Nombre -->
+    <div class="modal fade" id="editName" tabindex="-1" role="dialog"
+         aria-labelledby="editNameLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editNameLabel">Editar Nombre del
+                        Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="edit_name" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input name="name" class="form-control" type="text"
+                               placeholder="Ingrese Nombre">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar
+                            Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
 
 
     <!-- Estado -->
-    <div class="modal fade" id="editState" tabindex="-1" role="dialog" aria-labelledby="editStateLabel" aria-hidden="true">
+    <div class="modal fade" id="editState" tabindex="-1" role="dialog"
+         aria-labelledby="editStateLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editStateLabel">Editar Estado del Artículo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="editStateLabel">Editar Estado
+                        del Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="edit_state" method="post" enctype="multipart/form-data">
+                <form action="edit_state" method="post"
+                      enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
                         <select id="stateSelect" name="state">
@@ -106,8 +133,49 @@
                             <option value="R">En Reparación</option>
                             <option value="L">Perdido</option>
                         </select>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar
+                            Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Capacidad -->
+    <div class="modal fade" id="editCapacity" tabindex="-1" role="dialog"
+         aria-labelledby="editCapacityLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCapacityLabel">Editar Estado
+                        del Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="edit_capacity" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="textarea1">Ingrese Descripción del
+                                artículo</label>
+                            <textarea name="capacidad" class="form-control"
+                                      id="textarea1"
+                                      rows="4">{{ space.capacity }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar
+                            Cambios
+                        </button>
                     </div>
                 </form>
             </div>
@@ -117,58 +185,76 @@
 
 
     <!-- Imagen -->
-    <div class="modal fade" id="editImage" tabindex="-1" role="dialog" aria-labelledby="editImageLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editImageLabel">Editar Imagen del Artículo</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-            <form action="edit_image" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-          <div class="modal-body">
-            <label for="editImageControl">Subir Imagen</label>
-            <input type="file" class="form-control-file" id="editImageControl" name="image">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-          </div>
-            </form>
+    <div class="modal fade" id="editImage" tabindex="-1" role="dialog"
+         aria-labelledby="editImageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editImageLabel">Editar Imagen
+                        del Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="edit_image" method="post"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <label for="editImageControl">Subir Imagen</label>
+                        <input type="file" class="form-control-file"
+                               id="editImageControl" name="image">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar
+                            Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
 
     <!-- Descripcion -->
-    <div class="modal fade" id="editDescription" tabindex="-1" role="dialog" aria-labelledby="editDescriptionLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editDescriptionLabel">Editar Nombre del Artículo</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-            <form action="edit_description" method="post">
-                {% csrf_token %}
-          <div class="modal-body">
-            <div class="form-group">
-                <label for="textarea1">Ingrese Descripción del artículo</label>
-                <textarea name="description" class="form-control" id="textarea1" rows="4">{{ space.description }}</textarea>
+    <div class="modal fade" id="editDescription" tabindex="-1" role="dialog"
+         aria-labelledby="editDescriptionLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDescriptionLabel">Editar
+                        Nombre del Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="edit_description" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="textarea1">Ingrese Descripción del
+                                artículo</label>
+                            <textarea name="description" class="form-control"
+                                      id="textarea1"
+                                      rows="4">{{ space.description }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar
+                            Cambios
+                        </button>
+                    </div>
+                </form>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-          </div>
-            </form>
         </div>
-      </div>
     </div>
 
 
-</div>
 {% endblock %}
 
