@@ -17,6 +17,8 @@ from django.contrib import messages
 def space_data(request, space_id, date=None):
 	try:
 		space = Space.objects.get(id=space_id)
+		space_request(request)
+
 		if date:
 			current_date = date
 			current_week = datetime.datetime.strptime(current_date,
@@ -80,16 +82,21 @@ def space_data(request, space_id, date=None):
 		return redirect('/')
 
 
-def verificar_horario_habil(horario):
-	if horario.isocalendar()[2] > 5:
+def verificar_horario_habil(init, end):
+	if init.isocalendar()[2] > 5:
 		return False
-	if horario.hour < 9 or horario.hour > 18:
+	if init.hour < 9 or end.hour > 18:
+		return False
+	if not Reservation.objects.filter(starting_date_time__lte=init,
+	                              ending_date_time__gte=init):
 		return False
 
+	if not Reservation.objects.filter(starting_date_time__gte=init,
+	                                  ending_date_time__lte=end):
+		return False
 	return True
 
 
-@login_required
 def space_request(request):
 	if request.method == 'POST':
 		space = Space.objects.get(id=request.POST['space_id'])
@@ -113,9 +120,7 @@ def space_request(request):
 				elif start_date_time.date() != end_date_time.date():
 					messages.warning(request,
 					                 'Los pedidos deben ser devueltos el mismo día que se entregan.')
-				elif not verificar_horario_habil(
-						start_date_time) and not verificar_horario_habil(
-					end_date_time):
+				elif not verificar_horario_habil(start_date_time, end_date_time):
 					messages.warning(request,
 					                 'Los pedidos deben ser hechos en horario hábil.')
 				else:
@@ -131,7 +136,6 @@ def space_request(request):
 			messages.warning(request,
 			                 'Usuario no habilitado para pedir préstamos')
 
-		return redirect('/space/' + str(space.id))
 
 
 @login_required
