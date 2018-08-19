@@ -17,7 +17,7 @@ from django.contrib import messages
 def space_data(request, space_id, date=None):
 	try:
 		space = Space.objects.get(id=space_id)
-		space_request(request)
+		space_request(request, space_id)
 
 		if date:
 			current_date = date
@@ -55,19 +55,23 @@ def space_data(request, space_id, date=None):
 
 		colores = {'A': 'rgba(0,153,0,0.7)',
 		           'P': 'rgba(51,51,204,0.7)'}
-		reservations = Reservation.objects.filter(
+		reservations = Reservation.objects.filter(space=space,
 			starting_date_time__week=current_week, state__in=['P', 'A'])
 		res_list = []
 		for i in range(5):
 			res_list.append(list())
 		for r in reservations:
-			print(r)
-			reserv = []
-			reserv.append(r.space.name)
-			reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
-			reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
-			reserv.append(colores[r.state])
-			res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
+			try:
+				print(r)
+				reserv = []
+				reserv.append(r.space.name)
+				reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
+				reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
+				reserv.append(colores[r.state])
+				res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
+
+			except:
+				pass
 
 		context = {
 			'space': space,
@@ -78,49 +82,50 @@ def space_data(request, space_id, date=None):
 
 		return render(request, 'space_data.html', context)
 	except Exception as e:
-		print(e)
 		return redirect('/')
 
 
-def verificar_horario_habil(init, end):
-	if init.isocalendar()[2] > 5:
-		return False
+def verificar_horario_habil(init, end, space_id):
 	if init.hour < 9 or end.hour > 18:
 		return False
-	if not Reservation.objects.filter(starting_date_time__lte=init,
-	                              ending_date_time__gte=init):
+	if Reservation.objects.filter(starting_date_time__lte=init,
+	                              ending_date_time__gte=init, space=space_id):
 		return False
 
-	if not Reservation.objects.filter(starting_date_time__gte=init,
-	                                  ending_date_time__lte=end):
+	if Reservation.objects.filter(starting_date_time__gte=init,
+	                                  ending_date_time__lte=end, space=space_id):
 		return False
+
+	if init.weekday() > 4: # fin de semana
+		return False
+
 	return True
 
 
-def space_request(request):
-	if request.method == 'POST':
-		space = Space.objects.get(id=request.POST['space_id'])
+def space_request(request, space_id):
+	if request.method == 'POST' and 'picked-date' in request.POST:
+		space = Space.objects.get(id=space_id)
 
 		if request.user.enabled:
 			try:
-				string_inicio = request.POST['fecha_inicio'] + " " + \
-				                request.POST['hora_inicio']
-				start_date_time = datetime.strptime(string_inicio,
-				                                    '%Y-%m-%d %H:%M')
-				string_fin = request.POST['fecha_fin'] + " " + request.POST[
-					'hora_fin']
-				end_date_time = datetime.strptime(string_fin, '%Y-%m-%d %H:%M')
+				string_inicio = request.POST['picked-date'] + " " + \
+				                request.POST['picked-start-time']
+				start_date_time = datetime.datetime.strptime(string_inicio,
+				                                    '%d/%m/%Y %H:%M')
+				string_fin = request.POST['picked-date'] + " " + request.POST[
+					'picked-end-time']
+				end_date_time = datetime.datetime.strptime(string_fin, '%d/%m/%Y %H:%M')
 
 				if start_date_time > end_date_time:
 					messages.warning(request,
 					                 'La reserva debe terminar después de iniciar.')
-				elif start_date_time < datetime.now() + timedelta(hours=1):
+				elif start_date_time - datetime.datetime.now() < timedelta(hours=1):
 					messages.warning(request,
 					                 'Los pedidos deben ser hechos al menos con una hora de anticipación.')
 				elif start_date_time.date() != end_date_time.date():
 					messages.warning(request,
 					                 'Los pedidos deben ser devueltos el mismo día que se entregan.')
-				elif not verificar_horario_habil(start_date_time, end_date_time):
+				elif not verificar_horario_habil(start_date_time, end_date_time, space_id):
 					messages.warning(request,
 					                 'Los pedidos deben ser hechos en horario hábil.')
 				else:
@@ -131,11 +136,11 @@ def space_request(request):
 					reservation.save()
 					messages.success(request, 'Pedido realizado con éxito')
 			except Exception as e:
+				print(e)
 				messages.warning(request, 'Ingrese una fecha y hora válida.')
 		else:
 			messages.warning(request,
 			                 'Usuario no habilitado para pedir préstamos')
-
 
 
 @login_required
