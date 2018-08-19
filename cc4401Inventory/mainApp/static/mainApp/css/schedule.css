@@ -107,6 +107,11 @@ Main Components
     position: relative;
     height: 20px;
   }
+  
+  .events-group li {
+    position: relative;
+    height: 20px;
+  }
   .cd-schedule .timeline li::after {
     /* this is used to create the table horizontal lines */
     content: '';

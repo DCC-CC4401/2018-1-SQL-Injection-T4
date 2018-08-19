@@ -46,7 +46,8 @@
             <td>{{ article.state }}</td>
             <td class="center-column">
               <a class="table-button" href="{% url 'article_data_admin' article.id %}"><i class="fas fa-edit"></i></a>
-              <a class="table-button" href="#"><i class="fas fa-trash"></i></a>
+              <a class="remove_art table-button" href="#" data-toggle="modal" data-target="#myModal">
+                <i class="fas fa-trash"  data-article-id="{{article.id}}"></i></a>
             </td>
           </tr>
           {% endfor %}
@@ -82,5 +83,52 @@
     </div>
   </div>
 </div>
+<<<<<<< Updated upstream
 </div>
+
+
+<!-- Trigger the modal with a button -->
+
+
+<!-- Modal -->
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Eliminar</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <form action="removeArticle" method="post">
+      
+          <!-- Modal body -->
+          <div class="modal-body">
+            El articulo será eliminado
+          </div>
+    
+          <!-- Modal footer -->
+          <div class="modal-footer">
+                {% csrf_token %}
+              <input id="remove-art-id" name="article_id" hidden class="form-control" type="text" value="0">
+              <button type="submit" class="btn btn-danger" >
+                Eliminar
+              </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+  $(document).ready(function(){
+    $('.remove_art').on('click',function(ev){
+      $('#remove-art-id').val($(ev.target).data('article-id'))
+    })
+  })
+</script>
+=======
+</div><
+>>>>>>> Stashed changes
 {% endblock %}
