@@ -81,8 +81,8 @@
             <th scope="col">Nombre del Espacio</th>
             <th scope="col">Usuario</th>
             <th scope="col">Fecha de Prestamo</th>
-            <th scope="col">Estado de Articulo</th>
-            <th scope="col">Estado de Prestamo</th>
+            <th scope="col">Estado</th>
+            <!-- <th scope="col">Estado de Prestamo</th> -->
             <th scope="col">Seleccionar</th>
           </tr>
           </thead>
@@ -94,7 +94,7 @@
             <td>{{ loan.user.get_full_name }}</td>
             <td>{{ loan.starting_date_time }}</td>
             <td>{{ loan.article.get_state_display }}</td>
-            <td>{{ loan.get_state_display }}</td>
+            <!-- <td>{{ loan.get_state_display }}</td> -->
             <td><input type="checkbox" name="selected" value="{{ loan.id }}"></td>
           </tr>
           {% endfor %}
