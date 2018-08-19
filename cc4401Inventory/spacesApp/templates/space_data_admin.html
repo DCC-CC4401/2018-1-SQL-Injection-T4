@@ -46,7 +46,7 @@
             <div>
                 {% if space.image %}
                     <img src=" {% static space.image.url %}" class="img-fluid"
-                         alt="Foto" style="height: 400px"/>
+                         alt="Foto" style="height: inherit"/>
                 {% else %}
                     <img class="card-img-top"
                          src="{% static 'img/items/default_space.jpg' %}"
