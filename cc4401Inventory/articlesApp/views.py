@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from articlesApp.models import Article
+from articlesApp.forms import ArticleForm
 from loansApp.models import Loan
 from django.db import models
 from datetime import datetime, timedelta
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 import random, os
 import pytz
+
 from django.contrib import messages
 
 
@@ -100,7 +105,22 @@ def article_data_admin(request, article_id):
         except:
             return redirect('/')
 
+@login_required
+def article_data_admin_create(request):
+    if not request.user.is_staff:
+        return redirect('/')
+    if request.method == "GET":
+        context = {"states" : Article.STATES}
+        return render(request, 'article_data_admin_create.html', context)
+    if request.method == "POST":
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        else:
+            context = {"states" : Article.STATES, "error": "Datos no validos, porfavor intente otra vez"}
+            return render(request, 'article_data_admin_create.html', context)
 
+    return redirect('/')
 
 @login_required
 def article_edit_name(request, article_id):
