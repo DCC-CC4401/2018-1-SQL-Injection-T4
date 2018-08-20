@@ -84,3 +84,4 @@ def search(request):
 
         products = None if (request.GET['query'] == "") else articles
         return landing_search(request, products)
+
