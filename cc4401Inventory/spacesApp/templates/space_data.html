@@ -86,29 +86,26 @@
         // "Lunes","Martes","Miercoles","Jueves","Viernes"
         $('.week-day li').on('click', function(e){
             el = $(e.target)
-            console.log(el.data("time")) 
-            console.log(el.closest("li.week-day")) 
             selectDate(el)
-            
-        })	
+        })
     })
     function selectDate(el){
         date = $("#picked-date")
         weekday = el.closest('.week-day')
-        console.log(date.val() + "-" + weekday.data('day'))
+        // console.log(weekday.data("day-num"))
         
         if (date.val() == ""){
-            selectStartDate(el)
+            selectStartTime(el)
         } else {
             if(date.val() == weekday.data('day')){
-                selectEndDate(el)
+                selectEndTime(el)
             } else {
-                selectStartDate(el)
+                selectStartTime(el)
             }
         }
         date.val(weekday.data('day'))
     }
-    function selectStartDate(el){
+    function selectStartTime(el){
         startTime = $("#picked-start-time")
         startTime.val(el.data("time"))
 
@@ -118,26 +115,36 @@
         endTime = $("#picked-end-time")
         endTime.val("")
         endTime.data("pseudo-time", -1)
-        
+
+        //paint cells
+        startPseudoTime = parseInt(startTime.data("pseudo-time"))
+        paintCells(el, startPseudoTime,  startPseudoTime)
     }
-    function selectEndDate(el){
+
+    function selectEndTime(el){
         startTime = $("#picked-start-time")
         endTime = $("#picked-end-time")
         endTime.data("pseudo-time", el.data("pseudo-time"))
 
-        startPseudoTime = startTime.data("pseudo-time")
-        endPseudoTime = endTime.data("pseudo-time")
+        startPseudoTime = parseInt(startTime.data("pseudo-time"))
+        endPseudoTime = parseInt(endTime.data("pseudo-time"))
 
-        console.log(parseInt(endPseudoTime) != -1 )
-        console.log(parseInt(startPseudoTime), parseInt(endPseudoTime))
-        
-        
-        if (parseInt(startPseudoTime) < parseInt(endPseudoTime)){
+        if (startPseudoTime < endPseudoTime){
             endTime.val(el.data("time"))
+            paintCells(el, startPseudoTime, endPseudoTime)
         } else {
-            selectStartDate(el)
+            selectStartTime(el)
         }
-            
+        
+    }
+    function paintCells(el, ini, end){
+        $('li').removeClass("bg-primary") 
+
+        weekday = el.closest('.week-day')
+        weekday.find("li").filter(function(ind){
+            elTime = parseInt($(this).data("pseudo-time"))
+            return elTime <= end && elTime >= ini
+        }).addClass("bg-primary")
     }
 </script>
 {% endblock %}

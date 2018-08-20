@@ -35,7 +35,7 @@
 			{% with days="Lunes Martes Miercoles Jueves Viernes" dayList="0 1 2 3 4"%}
 
 			{% for res, day in reservations|zipWith:dayList.split %}
-			<li class="events-group week-day" data-day="{{day|weekDayToDate:actual_monday}}">
+			<li class="events-group week-day" data-day-num="{{day}}" data-day="{{day|weekDayToDate:actual_monday}}">
 				<div class="top-info"><span>{{day|dayNumberToWeekDay:days.split}}</span></div>
 				<ul>
 					<li data-pseudo-time="0" data-time="09:00"></li>
