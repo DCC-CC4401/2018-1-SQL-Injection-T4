@@ -43,132 +43,97 @@
             </div>
 
             <!-- Contenido de las Reservas y Préstamos-->
-            <div class="tab-content col-md-12">
+            <div class="tab-content col-lg-12">
 
                 <!-- Contenido de reservas-->
                 <div id="reservas" class="container tab-pane active"><br>
                     {% if reservations %}
-                        <div class="row">
+                    <div class="row">
 
                         <!-- Checkbox, Nombre, Estado-->
-                        <div class="col-md-3">
-                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                                 aria-orientation="vertical">
-                                <form method="post" action="{% url 'delete_reservation' %}">
+                        <div class="col-lg-3">
+                        <form method="post" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
                                     <input class="delete-button" type="submit" value="Eliminar Reservas">
                                     <br>
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                 aria-orientation="vertical">
+
                                     {% for reservation in reservations %}
                                         <!-- Casilla solo en los pendientes -->
                                         {% if reservation.state == 'P' %}
                                             <input id="reservation-{{ reservation.id }}" name="reservation" class="form-check-input"
                                                    type="checkbox" value="{{ reservation.id }}">
                                         {% endif %}
-                                        <label for="reservation-{{ reservation.id }}">
-                                            {{ reservation.space.name }} <span
-                                                class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
-                                        </label>
-                                      <br>
+                                        <a class="nav-link {% if forloop.first %} active {% endif %}
+                                         d-flex justify-content-between align-items-center" id="v-pills-{{ reservation.pk }}-tab" data-toggle="pill"
+                                           href="#v-pills-{{ reservation.pk }}" role="tab" aria-controls="v-pills-{{ reservation.pk }}"
+                                           aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">
+                                            {{ reservation.space.name }} <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
+                                        </a>
+
                                     {% endfor %}
-                                </form>
                             </div>
+                        </form>
                         </div>
 
                         <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
-                        <div class="col-md-7 offset-1">
-                            <div class="tab-content" id="v-pills-tabContent">
-                                <div class="row">
-                                {% for reservation in reservations %}
-                                    <div class="col-md-6">
-                                        <div class="card mt-4">
-                                            <div class="card-body">
-                                                <div class="tab-pane fade show active" id="v-pills-{{ reservation.pk }}"
-                                                     role="tabpanel"
-                                                     aria-labelledby="v-pills-{{ reservation.pk }}-tab">
+                        <div class="col-lg-9">
+                            <div class="card mt-4">
+                                <div class="card-body">
+                            		<div class="tab-content" id="v-pills-tabContent">
+                                	{% for reservation in reservations %}
+                                    	<div class="tab-pane fade {% if forloop.first %} show active {% endif %}" id="v-pills-{{ reservation.pk }}" role="tabpanel" aria-labelledby="v-pills-{{ reservation.pk }}-tab">
+	                                        <div class="d-flex w-100 justify-content-between">
+	                                            <h2 class="mb-1">{{ reservation.space.name }}</h2>
+	                                            <medium><strong>{{ reservation.starting_date_time }}</strong></medium>
+	                                        </div>
+                                        	{% if reservation.get_state_display == "Aceptado" %}
+                                            <medium class="rounded text-white bg-success">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
+                                            {% elif reservation.get_state_display == "Rechazado" %}
+                                            <medium class="rounded text-white bg-danger">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
+                                            {% else %}
+                                            <medium class="rounded text-white bg-secondary">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
+                                            {% endif %}
+	                                        <!-- Imagen de las reservas-->
+	                                    	<div>
+	                                        {% if reservation.space.image %}
+	                                            <img src=" {% static reservation.space.image.url %}" class="img-fluid" alt="Foto"/>
+	                                        {% else %}
+	                                            <img class="card-img-top img-fluid" src="{% static 'img/items/default_article.jpg' %}" alt="Card image cap">
+	                                        {% endif %}
+	                                    	</div>
 
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h2 class="mb-1">{{ reservation.space.name }}</h2>
-                                                        <medium><strong>{{ reservation.starting_date_time }}</strong></medium>
-                                                    </div>
-                                                    {% if reservation.get_state_display == "Aceptado" %}
-                                                    <medium class="rounded text-white bg-success">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
-                                                    {% elif reservation.get_state_display == "Rechazado" %}
-                                                    <medium class="rounded text-white bg-danger">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
-                                                    {% else %}
-                                                    <medium class="rounded text-white bg-secondary">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
-                                                    {% endif %}
+	                                        <p>{{ reservation.space.description }}</p>
+											<br>
 
-                                                    <!-- Imagen de las reservas-->
-                                                    {% if reservation.space.image %}
-                                                        <img src=" {% static reservation.space.image.url %}" class="img-fluid" alt="Foto"/>
-                                                    {% else %}
-                                                        <img class="card-img-top img-fluid"
-                                                             src="{% static 'img/items/default_article.jpg' %}"
-                                                             alt="Card image cap">
-                                                    {% endif %}
+	                                        <p class="text-info">Reserva solicitada por <br> {{ reservation.user.first_name }} {{ reservation.user.last_name }}</p>
 
-
-                                                    <p>{{ reservation.space.description }}</p>
-                                                    <br>
-                                                    <p class="text-info">Reserva solicitada por <br> {{ reservation.user.first_name }} {{ reservation.user.last_name }}</p>
-
-                                                    <br>
-                                                    {% if reservation.state == 'P' %}
-                                                    <div class="row align-items-center">
-                                                        <div class="col"></div>
-                                                        <div class="col">
-                                                            <form method="post" action="{% url 'delete_reservation' %}">
-                                                                {% csrf_token %}
-                                                                <input class="delete-button" type="submit" value="Cancelar Reserva">
-                                                                <input id="reservation-{{ reservation.id }}" name="reservation" class="d-none" value="{{ reservation.id }}">
-                                                            </form>
-                                                        </div>
-                                                        <div class="col"></div>
-                                                    </div>
-                                                    {% endif %}
-
-                                                    <!--
-                                                    <div class="reservation-timeline">
-                                                        <div class="container_timeline right">
-                                                            <div class="content">
-                                                                <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                                    en proceso
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="container_timeline right">
-                                                            <div class="content">
-                                                                <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                                    en Enviado
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="container_timeline right">
-                                                            <div class="content">
-                                                                <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                                    enviada</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    -->
-
-                                                </div>
-                                            </div>
+	                                        <br>
+	                                        {% if reservation.state == 'P' %}
+	                                        <div class="row align-items-center">
+                                                <div class="col-md-5"></div>
+	                                            <div class="col-md-2">
+	                                                <form method="post" action="{% url 'delete_reservation' %}">
+	                                                    {% csrf_token %}
+	                                                    <input class="delete-button text-white" type="submit" value="Cancelar Reserva">
+	                                                    <input id="reservation-{{ reservation.id }}" name="reservation" class="d-none" value="{{ reservation.id }}">
+	                                                </form>
+	                                            </div>
+                                                <div class="col-md-5"></div>
+	                                        </div>
+	                                        {% endif %}
                                         </div>
-                                    </div>
-                                {% endfor %}
-                                </div>
-
+                                	{% endfor %}
+                                	</div>
+                            	</div>
                             </div>
                         </div>
-
-                        </div>
+                    </div>
                     {% else %}
                         <p>No se han realizado reservas</p>
                     {% endif %}
-                    </div>
+                </div>
 
                     <!-- Contenido de préstamos-->
                     <div id="prestamos" class="container tab-pane fade"><br>
@@ -183,11 +148,11 @@
 
                                             <!-- Tener seleccionado la primera casilla por default-->
 
-                                            <a class="nav-link {% if forloop.counter0 == 0 %} active {% endif %}
+                                            <a class="nav-link {% if forloop.first %} active {% endif %}
                                          d-flex justify-content-between align-items-center"
                                                id="v-pills-{{ loan.pk }}-tab" data-toggle="pill"
                                                href="#v-pills-{{ loan.pk }}"
-                                               role="tab" aria-controls="v-pills-{{ loan.pk }}" aria-selected="false">
+                                               role="tab" aria-controls="v-pills-{{ loan.pk }}" aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">
                                                 {{ loan.article.name }} <span
                                                     class="badge badge-pill badge-light">{{ loan.get_state_display }}</span></a>
                                         {% endfor %}
@@ -201,8 +166,7 @@
                                             <div class="tab-content" id="v-pills-tabContent">
 
                                                 {% for loan in loans %}
-                                                    <div class="tab-pane fade show {% if forloop.counter0 == 0 %}
-                                                    active {% endif %}"
+                                                    <div class="tab-pane fade {% if forloop.first %} show active {% endif %}"
                                                          id="v-pills-{{ loan.pk }}"
                                                          role="tabpanel"
                                                          aria-labelledby="v-pills-{{ loan.pk }}-tab">
@@ -220,6 +184,7 @@
                                                         {% endif %}
 
                                                         <!-- Imagen de los préstamos-->
+                                                    <div>
                                                         {% if loan.article.image %}
                                                             <img src=" {% static loan.article.image.url %}"
                                                                  class="img-fluid"
@@ -230,41 +195,10 @@
                                                                  src="{% static 'img/items/default_article.jpg' %}"
                                                                  alt="Card image cap">
                                                         {% endif %}
-
+                                                    </div>
                                                         <p>{{ loan.article.description }}</p>
                                                         <br>
                                                         <p class="text-info">Préstamo solicitado por <br> {{ loan.user.first_name }} {{ loan.user.last_name }}</p>
-
-                                                        <!--
-                                                        <div class="reservation-timeline">
-                                                            <div class="container_timeline right">
-                                                                <div class="content">
-                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
-                                                                        Solicitud en
-                                                                        proceso
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="container_timeline right">
-                                                                <div class="content">
-                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
-                                                                        Solicitud en
-                                                                        Enviado
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="container_timeline right">
-                                                                <div class="content">
-                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
-                                                                        Solicitud
-                                                                        enviada</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        -->
-
                                                     </div>
                                                 {% endfor %}
 
@@ -284,6 +218,4 @@
 
         </div>
 
-    </div>
-    </div>
 {% endblock %}
