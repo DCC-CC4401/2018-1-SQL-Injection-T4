@@ -15,3 +15,7 @@ def delete(request):
             messages.warning(request, 'Ha ocurrido un error y la reserva no se ha eliminado')
 
         return redirect('http://127.0.0.1:8000/user/user_data', u_id=request.user.id)
+
+
+def reserve_sheet(request):
+    return redirect('/')

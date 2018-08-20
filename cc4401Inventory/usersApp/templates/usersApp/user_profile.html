@@ -71,7 +71,7 @@
                                            aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">
                                             {{ reservation.space.name }} <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
                                         </a>
-                                      <br>
+
                                     {% endfor %}
                             </div>
                         </form>
@@ -95,6 +95,7 @@
                                         <medium class="text-muted">{{ reservation.get_state_display }}</medium>
 
                                         <!-- Imagen de las reservas-->
+                                    <div>
                                         {% if reservation.space.image %}
                                             <img src=" {% static reservation.space.image.url %}" class="img-fluid"
 
@@ -104,6 +105,7 @@
                                                  src="{% static 'img/items/default_article.jpg' %}"
                                                  alt="Card image cap">
                                         {% endif %}
+                                    </div>
 
 
                                         <p>{{ reservation.space.description }}</p>
@@ -131,6 +133,14 @@
                                                         enviada</p>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div>
+                                            <form id="article_post_{{ reservation.space.id }}" method="post" action="{% url 'reserve_sheet' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="article_id" value="{{ reservation.space.id }}">
+                                                <input class="btn" style="background-color: #78bbb4; color: white" type="submit" value="Ver más detalles de la reserva">
+                                            </form>
                                         </div>
 
                                         </div>
@@ -195,16 +205,17 @@
                                                         <medium class="text-muted">{{ loan.get_state_display }}</medium>
 
                                                         <!-- Imagen de los préstamos-->
+                                                    <div>
                                                         {% if loan.article.image %}
                                                             <img src=" {% static loan.article.image.url %}"
                                                                  class="img-fluid"
-                                                                 alt="Foto"
-                                                                 style="height: 900px"/>
+                                                                 alt="Foto"/>
                                                         {% else %}
                                                             <img class="card-img-top img-fluid"
                                                                  src="{% static 'img/items/default_article.jpg' %}"
                                                                  alt="Card image cap">
                                                         {% endif %}
+                                                    </div>
                                                         <p>{{ loan.article.description }}</p>
 
                                                         <div class="reservation-timeline">
