@@ -42,7 +42,8 @@
           {% for reservation in reservations_query %}
           <tr>
             <td>{{ reservation.id }}</td>
-            <td>{{ reservation.space.name }}</td>
+            <!-- <td>{{ reservation.space.name }}</td> -->
+            <td><a href="{% url 'space_data' reservation.space.id%}">{{ reservation.space.name }}</a></td>
             <td>{{ reservation.user.get_full_name }}</td>
             <td>{{ reservation.starting_date_time }}</td>
             <td><input type="checkbox" name="selected" value="{{ reservation.id }}"></td>
@@ -90,7 +91,8 @@
           {% for loan in loans %}
           <tr>
             <td>{{ loan.id }}</td>
-            <td>{{ loan.article.name }}</td>
+            <!-- <td>{{ loan.article.name }}</td> -->
+            <td><a href="{% url 'article_data' loan.article.id %}">{{ loan.article.name }}</a></td>
             <td>{{ loan.user.get_full_name }}</td>
             <td>{{ loan.starting_date_time }}</td>
             <td>{{ loan.article.get_state_display }}</td>

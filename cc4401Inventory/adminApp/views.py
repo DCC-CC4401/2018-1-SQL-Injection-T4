@@ -178,6 +178,8 @@ def queryCalendarData(current_week):
         reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
         reserv.append(colores_resv[r.state])
         reserv.append(r.get_state_display())
+        # link
+        reserv.append('/space/'+ str(r.id))
         res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
 
     current_week_loans = Loan.objects.filter(
@@ -189,6 +191,8 @@ def queryCalendarData(current_week):
         reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
         reserv.append(colores_loans[r.state])
         reserv.append(r.get_state_display())
+        # link
+        reserv.append('/article/'+ str(r.id))
         res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
     return res_list
 

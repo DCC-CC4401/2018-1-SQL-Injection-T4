@@ -42,9 +42,8 @@
           {% for article in articles %}
           <tr>
             <td>{{ article.id }}</td>
-            <td>{{ article.name }}</td>
-            <td>{{ article.imagen }}</td>
-            <td>{{ article.state }}</td>
+            <td><a href="{% url 'article_data' article.id %}">{{ article.name }}</a></td>
+            <td>{{ article.get_state_display }}</td>
             <td class="center-column">
               <a class="table-button" href="{% url 'article_data_admin' article.id %}"><i class="fas fa-edit"></i></a>
               <a class="remove_art table-button" href="#" data-toggle="modal" data-target="#myModal">
@@ -73,7 +72,7 @@
           {% for space in spaces %}
           <tr>
             <td>{{ space.id }}</td>
-            <td>{{ space.name }}</td>
+            <td><a href="{% url 'space_data' space.id%}">{{ space.name }}</a></td>
             <td>{{ space.get_state_display }}</td>
             <td class="center-column">
               <a class="table-button" href="{% url 'space_data_admin' space.id %}"><i class="fas fa-edit"></i>
