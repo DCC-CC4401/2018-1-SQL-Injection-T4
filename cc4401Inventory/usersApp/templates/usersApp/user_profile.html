@@ -80,67 +80,89 @@
                                 <div class="row">
                                 {% for reservation in reservations %}
                                     <div class="col-md-6">
-                                    <div class="card mt-4">
-                                        <div class="card-body">
-                                            <div class="tab-pane fade show active" id="v-pills-{{ reservation.pk }}"
-                                                 role="tabpanel"
-                                                 aria-labelledby="v-pills-{{ reservation.pk }}-tab">
+                                        <div class="card mt-4">
+                                            <div class="card-body">
+                                                <div class="tab-pane fade show active" id="v-pills-{{ reservation.pk }}"
+                                                     role="tabpanel"
+                                                     aria-labelledby="v-pills-{{ reservation.pk }}-tab">
 
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h2 class="mb-1">{{ reservation.space.name }}</h2>
-                                            <medium><strong>{{ reservation.starting_date_time }}</strong></medium>
-                                        </div>
-                                        <medium class="text-muted">{{ reservation.get_state_display }}</medium>
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        <h2 class="mb-1">{{ reservation.space.name }}</h2>
+                                                        <medium><strong>{{ reservation.starting_date_time }}</strong></medium>
+                                                    </div>
+                                                    {% if reservation.get_state_display == "Aceptado" %}
+                                                    <medium class="rounded text-white bg-success">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
+                                                    {% elif reservation.get_state_display == "Rechazado" %}
+                                                    <medium class="rounded text-white bg-danger">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
+                                                    {% else %}
+                                                    <medium class="rounded text-white bg-secondary">&nbsp;{{ reservation.get_state_display }}&nbsp;</medium>
+                                                    {% endif %}
 
-                                        <!-- Imagen de las reservas-->
-                                        {% if reservation.space.image %}
-                                            <img src=" {% static reservation.space.image.url %}" class="img-fluid"
-
-                                                 alt="Foto"/>
-                                        {% else %}
-                                            <img class="card-img-top img-fluid"
-                                                 src="{% static 'img/items/default_article.jpg' %}"
-                                                 alt="Card image cap">
-                                        {% endif %}
+                                                    <!-- Imagen de las reservas-->
+                                                    {% if reservation.space.image %}
+                                                        <img src=" {% static reservation.space.image.url %}" class="img-fluid" alt="Foto"/>
+                                                    {% else %}
+                                                        <img class="card-img-top img-fluid"
+                                                             src="{% static 'img/items/default_article.jpg' %}"
+                                                             alt="Card image cap">
+                                                    {% endif %}
 
 
-                                        <p>{{ reservation.space.description }}</p>
+                                                    <p>{{ reservation.space.description }}</p>
+                                                    <br>
+                                                    <p class="text-info">Reserva solicitada por <br> {{ reservation.user.first_name }} {{ reservation.user.last_name }}</p>
 
-                                        <div class="reservation-timeline">
-                                            <div class="container_timeline right">
-                                                <div class="content">
-                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                        en proceso
-                                                    </p>
+                                                    <br>
+                                                    {% if reservation.state == 'P' %}
+                                                    <div class="row align-items-center">
+                                                        <div class="col"></div>
+                                                        <div class="col">
+                                                            <form method="post" action="{% url 'delete_reservation' %}">
+                                                                {% csrf_token %}
+                                                                <input class="delete-button" type="submit" value="Cancelar Reserva">
+                                                                <input id="reservation-{{ reservation.id }}" name="reservation" class="d-none" value="{{ reservation.id }}">
+                                                            </form>
+                                                        </div>
+                                                        <div class="col"></div>
+                                                    </div>
+                                                    {% endif %}
+
+                                                    <!--
+                                                    <div class="reservation-timeline">
+                                                        <div class="container_timeline right">
+                                                            <div class="content">
+                                                                <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
+                                                                    en proceso
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="container_timeline right">
+                                                            <div class="content">
+                                                                <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
+                                                                    en Enviado
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="container_timeline right">
+                                                            <div class="content">
+                                                                <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
+                                                                    enviada</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    -->
+
                                                 </div>
                                             </div>
-
-                                            <div class="container_timeline right">
-                                                <div class="content">
-                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                        en Enviado
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div class="container_timeline right">
-                                                <div class="content">
-                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                        enviada</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        </div>
-
                                         </div>
                                     </div>
-                                  </div>
                                 {% endfor %}
                                 </div>
 
-                                </div>
                             </div>
+                        </div>
 
                         </div>
                     {% else %}
@@ -151,9 +173,7 @@
                     <!-- Contenido de préstamos-->
                     <div id="prestamos" class="container tab-pane fade"><br>
                         {% if loans %}
-
                             <div class="row">
-
                                 <!-- Nombre, Estado-->
                                 <div class="col-lg-3">
                                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
@@ -175,13 +195,12 @@
                                 </div>
 
                                 <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
-                                <div class="col-lg-9">
+                                <div class="col-md-6">
                                     <div class="card mt-4">
                                         <div class="card-body">
                                             <div class="tab-content" id="v-pills-tabContent">
 
                                                 {% for loan in loans %}
-
                                                     <div class="tab-pane fade show {% if forloop.counter0 == 0 %}
                                                     active {% endif %}"
                                                          id="v-pills-{{ loan.pk }}"
@@ -190,17 +209,22 @@
 
                                                         <div class="d-flex w-100 justify-content-between">
                                                             <h2 class="mb-1">{{ loan.article.name }}</h2>
-                                                            <medium><strong>{{ loan.starting_date_time }}</strong>
-                                                            </medium>
+                                                            <medium><strong>{{ loan.starting_date_time }}</strong></medium>
                                                         </div>
-                                                        <medium class="text-muted">{{ loan.get_state_display }}</medium>
+                                                        {% if loan.get_state_display == "Aceptado" %}
+                                                        <medium class="rounded text-white bg-success">&nbsp;{{ loan.get_state_display }}&nbsp;</medium>
+                                                        {% elif loan.get_state_display == "Rechazado" %}
+                                                        <medium class="rounded text-white bg-danger">&nbsp;{{ loan.get_state_display }}&nbsp;</medium>
+                                                        {% else %}
+                                                        <medium class="rounded text-white bg-secondary">&nbsp;{{ loan.get_state_display }}&nbsp;</medium>
+                                                        {% endif %}
 
                                                         <!-- Imagen de los préstamos-->
                                                         {% if loan.article.image %}
                                                             <img src=" {% static loan.article.image.url %}"
                                                                  class="img-fluid"
                                                                  alt="Foto"
-                                                                 style="height: 900px"/>
+                                                                 style="max-height: 350px;"/>
                                                         {% else %}
                                                             <img class="card-img-top img-fluid"
                                                                  src="{% static 'img/items/default_article.jpg' %}"
@@ -208,7 +232,10 @@
                                                         {% endif %}
 
                                                         <p>{{ loan.article.description }}</p>
+                                                        <br>
+                                                        <p class="text-info">Préstamo solicitado por <br> {{ loan.user.first_name }} {{ loan.user.last_name }}</p>
 
+                                                        <!--
                                                         <div class="reservation-timeline">
                                                             <div class="container_timeline right">
                                                                 <div class="content">
@@ -236,6 +263,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        -->
 
                                                     </div>
                                                 {% endfor %}
