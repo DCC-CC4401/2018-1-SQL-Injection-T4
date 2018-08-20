@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from spacesApp.models import Space
+from spacesApp.forms import SpaceForm
 from reservationsApp.models import Reservation
 from django.db import models
 from datetime import timedelta
@@ -152,6 +153,22 @@ def space_data_admin(request, space_id):
 		except:
 			return redirect('/')
 
+@login_required
+def space_data_admin_create(request):
+    if not request.user.is_staff:
+        return redirect('/')
+
+    if request.method == "GET":
+        context = {"states" : Space.STATES}
+        return render(request, 'space_data_admin_create.html', context)
+    if request.method == "POST":
+        form = SpaceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('/admin/items-panel')
+        else:
+            context = {"states" : Space.STATES, "error": "Datos no validos, porfavor intente otra vez"}
+            return redirect('/admin/items-panel')
 
 @login_required
 def space_edit_name(request, space_id):
