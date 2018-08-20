@@ -9,5 +9,6 @@ urlpatterns = [
     path('actions-panel/modify', views.modify_reservations, name="modify_reservations"),
     path('actions-panel/modify-loans', views.modify_loans, name="modify_loans"),
     # POST
-    path('items-panel/removeArticle', views.remove_article, name="remove_article")
+    path('items-panel/removeArticle', views.remove_article, name="remove_article"),
+    path('items-panel/removeSpace', views.remove_space, name="remove_space")
 ]
