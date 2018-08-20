@@ -78,13 +78,15 @@
             <td class="center-column">
               <a class="table-button" href="{% url 'space_data_admin' space.id %}"><i class="fas fa-edit"></i>
               </a>
-              <a class="table-button" href="#"><i class="fas fa-trash"></i></a>
+              <a class="remove_space table-button" href="#" data-toggle="modal" data-target="#myModal2">
+                  <i class="fas fa-trash"  data-space-id="{{space.id}}"></i>
+              </a>
             </td>
           </tr>
           {% endfor %}
           </tbody>
         </table>
-        <a href="" class="btn btn-primary">Nuevo Espacio</a>
+        <a href="{% url 'space_data_admin_create' %}" class="btn btn-primary">Nuevo Espacio</a>
       </div>
     </div>
   </div>
@@ -97,7 +99,7 @@
 
 
 <!-- Modal -->
-<!-- The Modal -->
+<!-- The Modal for article -->
 <div class="modal" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -127,10 +129,44 @@
     </div>
   </div>
 
+  <!-- The Modal for article -->
+<div class="modal" id="myModal2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Eliminar</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <form action="removeSpace" method="post">
+      
+          <!-- Modal body -->
+          <div class="modal-body">
+            El espacio será eliminado
+          </div>
+    
+          <!-- Modal footer -->
+          <div class="modal-footer">
+                {% csrf_token %}
+              <input id="remove-space-id" name="space_id" hidden class="form-control" type="text" value="0">
+              <button type="submit" class="btn btn-danger" >
+                Eliminar
+              </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 <script>
   $(document).ready(function(){
     $('.remove_art').on('click',function(ev){
       $('#remove-art-id').val($(ev.target).data('article-id'))
+    })
+
+    $('.remove_space').on('click',function(ev){
+      $('#remove-space-id').val($(ev.target).data('space-id'))
     })
   })
 </script>

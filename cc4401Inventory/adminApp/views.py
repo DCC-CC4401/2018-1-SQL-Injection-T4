@@ -141,7 +141,15 @@ def remove_article(request):
         art.delete()
     
     return redirect('/admin/items-panel')
+
+def remove_space(request):
+    if request.method == "POST":
+        artId = request.POST["space_id"]
+        art = Space.objects.get(id=artId)
+        art.delete()
     
+    return redirect('/admin/items-panel')
+
 
 
 ############################################

@@ -11,4 +11,6 @@ urlpatterns = [
     path('<int:space_id>/edit_description', views.space_edit_description, name='space_edit_description'),
     path('<int:space_id>/edit_capacity', views.space_edit_capacity, name='space_edit_capacity'),
     path('request', views.space_request, name='space_request'),
+
+    path('create', views.space_data_admin_create, name='space_data_admin_create'),
 ]

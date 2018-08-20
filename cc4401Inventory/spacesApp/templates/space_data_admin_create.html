@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block title %}
-Crear Artículo: {{ article.name }}
+Crear Espacio
 {% endblock %}
 
 {% block body %}
@@ -23,7 +23,7 @@ Crear Artículo: {{ article.name }}
       <form id="art-form" action="create" method="post" enctype="multipart/form-data" >
         {% csrf_token %}
         <div class="form-group">
-          <label for="input-name">Nombre de Artículo</label>
+          <label for="input-name">Nombre de Espacio</label>
           <input name="name" type="input" class="form-control" id="input-name" placeholder="Nombre de Artículo">
           <small id="emailHelp" class="form-text text-muted">Este campo no puede estar vacio.</small>
         </div>
@@ -40,6 +40,12 @@ Crear Artículo: {{ article.name }}
           <label for="input-file">Imagen</label>
           <input name="image" type="file" class="form-control" id="input-img" placeholder="Imagen">
           <small id="emailHelp" class="form-text text-muted">Este campo no puede estar vacio.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="input-capacidad">Capacidad</label>
+            <input name="capacity" type="number" class="form-control" id="input-capacidad" placeholder="Capacidad">
+            <small id="input-capacidad-help" class="form-text text-muted">Este campo no puede estar vacio.</small>
         </div>
 
         <div class="form-group">
@@ -60,18 +66,25 @@ Crear Artículo: {{ article.name }}
   $(document).ready(function(){
     $( "#art-form" ).submit(function( event ) {
       $("#art-form input").removeClass("is-invalid")
-      var validations = 2
+      
+      var validations = 3
       var name = $("#input-name");
       var img = $("#input-img");
       if(name.val() == ""){
         name.addClass("is-invalid")
         validations = validations - 1 
       }
+
       if(img.val() == ""){
         img.addClass("is-invalid")
         validations = validations - 1 
       }
-      if (validations<2)
+      var cap =$("#input-capacidad")
+      if(cap.val() == ""){
+        cap.addClass("is-invalid")
+        validations = validations - 1 
+      }
+      if (validations<3)
         event.preventDefault();
     });
     // $("#art-create-button").on('click',function(ev){

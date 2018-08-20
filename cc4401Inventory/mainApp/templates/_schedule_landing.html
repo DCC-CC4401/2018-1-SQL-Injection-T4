@@ -35,7 +35,7 @@
 			{% with days="Lunes Martes Miercoles Jueves Viernes" dayList="0 1 2 3 4"%}
 
 			{% for res, day in reservations|zipWith:dayList.split %}
-			<li class="events-group week-day" data-day="{{day|weekDayToDate:actual_monday}}">
+			<li class="events-group week-day" data-day-num="{{day}}" data-day="{{day|weekDayToDate:actual_monday}}">
 				<div class="top-info"><span>{{day|dayNumberToWeekDay:days.split}}</span></div>
 				<ul>
 					<li data-pseudo-time="0" data-time="09:00"></li>
@@ -73,7 +73,7 @@
 		</ul>
 	</div>
 
-	<div class="week-select" id="week-select">
+	<div class="week-select" id="week-select" style="position:relative; background: none">
 		<div style="text-align: center; margin-right: auto; margin-left: auto; width: 200px; font-size: 18px">
 			<form action="" method="get" class="selectform">
 				<a href="?date={{controls.0}}" role="button"><i class="fas fa-angle-double-left"></i></a>
@@ -108,14 +108,11 @@
 
 		<a href="#0" class="close">Close</a>
 	</div>
-
-	<div class="cover-layer"></div>
     
 
 </div> <!-- .cd-schedule -->
 
 <script src="{% static 'js/modernizr.js' %}"></script>
 <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
-
 <script src="{% static 'js/main.js' %}"></script> <!-- Resource jQuery -->
 
