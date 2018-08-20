@@ -34,6 +34,7 @@
             <th scope="col">Nombre del Espacio</th>
             <th scope="col">Usuario</th>
             <th scope="col">Fecha de Prestamo</th>
+            <th scope="col">Estado</th>
             <th scope="col"> Seleccionar</th>
           </tr>
           </thead>
@@ -46,6 +47,7 @@
             <td><a href="{% url 'space_data' reservation.space.id%}">{{ reservation.space.name }}</a></td>
             <td>{{ reservation.user.get_full_name }}</td>
             <td>{{ reservation.starting_date_time }}</td>
+            <td>{{ reservation.get_state_display }}</td>
             <td><input type="checkbox" name="selected" value="{{ reservation.id }}"></td>
           </tr>
           {% endfor %}
