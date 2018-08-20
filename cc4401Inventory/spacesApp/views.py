@@ -9,6 +9,7 @@ import datetime
 from django.utils.timezone import localtime
 
 
+
 import random, os, re
 import pytz
 from django.contrib import messages
@@ -104,9 +105,10 @@ def verificar_horario_habil(init, end, space_id):
 
 
 def verificar_espacio_quincho(init, end, name):
-	yesterday = datetime.now() - timedelta(hours=24)
+	now = datetime.datetime.now()
+	before24 = init - timedelta(hours=24)
 	if re.search('quincho', name, re.IGNORECASE):
-		return yesterday < init 
+		return now < before24 
 	return True
 	
 
@@ -128,9 +130,9 @@ def space_request(request, space_id):
 				if start_date_time > end_date_time:
 					messages.warning(request,
 					                 'La reserva debe terminar después de iniciar.')
-				elif start_date_time - datetime.datetime.now() < timedelta(hours=1):
+				elif (start_date_time - datetime.datetime.now() < timedelta(hours=1)) and (not re.search('quincho', space.name, re.IGNORECASE)):
 					messages.warning(request,
-					                 'Los pedidos deben ser hechos al menos con una hora de anticipación.')
+					                 'Los pedidos (menos el Quincho) deben ser hechos al menos con una hora de anticipación.')
 				elif start_date_time.date() != end_date_time.date():
 					messages.warning(request,
 					                 'Los pedidos deben ser devueltos el mismo día que se entregan.')
