@@ -138,13 +138,17 @@
         
     }
     function paintCells(el, ini, end){
-        $('li').removeClass("bg-primary") 
+        clearPaintedCells()
 
         weekday = el.closest('.week-day')
         weekday.find("li").filter(function(ind){
             elTime = parseInt($(this).data("pseudo-time"))
             return elTime <= end && elTime >= ini
         }).addClass("bg-primary")
+    }
+
+    function clearPaintedCells(){
+        $('li').removeClass("bg-primary") 
     }
 </script>
 {% endblock %}
