@@ -26,7 +26,7 @@ Sistema de Reserva CEI - Ver Artículos
 
     <div class="row">
         <div class="col-2"></div>
-        <div class="col-8">
+        <div class="col-9">
         <form method="get" action="{% url 'search' %}">
 
             <div class="row">
@@ -40,8 +40,8 @@ Sistema de Reserva CEI - Ver Artículos
 
                     </div>
                 </div>
-                <div class="row w-75">
-                    <div class="col-6">
+                <div class="row w-100">
+                    <div class="col-5">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="inputGroupSelect01">Fecha</label>
@@ -49,7 +49,7 @@ Sistema de Reserva CEI - Ver Artículos
                             <input type="date" name="fecha">
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="inputGroupSelect02">Estado</label>
@@ -63,11 +63,19 @@ Sistema de Reserva CEI - Ver Artículos
                             </select>
                         </div>
                     </div>
+                    <div class="col-3">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" id="id">ID</label>
+                            </div>
+                            <input type="number" name="id" class="form-control" aria-label="id" aria-describedby="id">
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
         </div>
-        <div class="col-2"></div>
+        <div class="col-1"></div>
 
     <div class="card-columns">
         {% for producto in productos %}

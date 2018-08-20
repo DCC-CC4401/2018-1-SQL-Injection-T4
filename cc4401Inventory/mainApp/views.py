@@ -80,10 +80,13 @@ def search(request):
         query = request.GET['query']
         a_state = request.GET['estado']
         date = request.GET['fecha']
+        article_id = request.GET['id']
+
         articles = Article.objects.all()
         if not (a_state == "A"):
             articles = articles.filter(state=a_state)
         if not (query == ''):
-            print("banana")
             articles = articles.filter(name__icontains=query.lower())
+        if not (article_id == ''):
+            articles = articles.filter(id=article_id)
         return landing_search(request, articles)
