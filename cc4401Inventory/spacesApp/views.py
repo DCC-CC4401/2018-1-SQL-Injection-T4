@@ -9,7 +9,7 @@ import datetime
 from django.utils.timezone import localtime
 
 
-import random, os
+import random, os, re
 import pytz
 from django.contrib import messages
 
@@ -103,6 +103,14 @@ def verificar_horario_habil(init, end, space_id):
 	return True
 
 
+def verificar_espacio_quincho(init, end, name):
+	yesterday = datetime.now() - timedelta(hours=24)
+	if re.search('quincho', name, re.IGNORECASE):
+		return yesterday < init 
+	return True
+	
+
+
 def space_request(request, space_id):
 	if request.method == 'POST' and 'picked-date' in request.POST:
 		space = Space.objects.get(id=space_id)
@@ -129,6 +137,8 @@ def space_request(request, space_id):
 				elif not verificar_horario_habil(start_date_time, end_date_time, space_id):
 					messages.warning(request,
 					                 'Los pedidos deben ser hechos en horario hábil.')
+				elif not verificar_espacio_quincho(start_date_time, end_date_time, space.name):
+					messages.warning(request, 'El quincho debe reservarse 24 antes.')
 				else:
 					reservation = Reservation(space=space,
 					                          starting_date_time=start_date_time,
