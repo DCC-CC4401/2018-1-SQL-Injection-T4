@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from reservationsApp.models import Reservation
 from datetime import datetime, timedelta, date
-from datetime import datetime
 
 class Command(BaseCommand):
     help = 'Corre cada hora para borrar la lista prestamos realizados'
