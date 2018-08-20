@@ -43,7 +43,7 @@
             </div>
 
             <!-- Contenido de las Reservas y Préstamos-->
-            <div class="tab-content col-md-12">
+            <div class="tab-content col-lg-12">
 
                 <!-- Contenido de reservas-->
                 <div id="reservas" class="container tab-pane active"><br>
@@ -51,38 +51,40 @@
                         <div class="row">
 
                         <!-- Checkbox, Nombre, Estado-->
-                        <div class="col-md-3">
-                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                                 aria-orientation="vertical">
-                                <form method="post" action="{% url 'delete_reservation' %}">
+                        <div class="col-lg-3">
+                        <form method="post" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
                                     <input class="delete-button" type="submit" value="Eliminar Reservas">
                                     <br>
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                 aria-orientation="vertical">
+
                                     {% for reservation in reservations %}
                                         <!-- Casilla solo en los pendientes -->
                                         {% if reservation.state == 'P' %}
                                             <input id="reservation-{{ reservation.id }}" name="reservation" class="form-check-input"
                                                    type="checkbox" value="{{ reservation.id }}">
                                         {% endif %}
-                                        <label for="reservation-{{ reservation.id }}">
-                                            {{ reservation.space.name }} <span
-                                                class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
-                                        </label>
-                                      <br>
+                                        <a class="nav-link {% if forloop.first %} active {% endif %}
+                                         d-flex justify-content-between align-items-center" id="v-pills-{{ reservation.pk }}-tab" data-toggle="pill"
+                                           href="#v-pills-{{ reservation.pk }}" role="tab" aria-controls="v-pills-{{ reservation.pk }}"
+                                           aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">
+                                            {{ reservation.space.name }} <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
+                                        </a>
+
                                     {% endfor %}
-                                </form>
                             </div>
+                        </form>
                         </div>
 
                         <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
-                        <div class="col-md-7 offset-1">
-                            <div class="tab-content" id="v-pills-tabContent">
-                                <div class="row">
-                                {% for reservation in reservations %}
-                                    <div class="col-md-6">
+                        <div class="col-lg-9">
                                     <div class="card mt-4">
                                         <div class="card-body">
-                                            <div class="tab-pane fade show active" id="v-pills-{{ reservation.pk }}"
+                            <div class="tab-content" id="v-pills-tabContent">
+
+                                {% for reservation in reservations %}
+                                    <div class="tab-pane fade {% if forloop.first %} show active {% endif %}" id="v-pills-{{ reservation.pk }}"
                                                  role="tabpanel"
                                                  aria-labelledby="v-pills-{{ reservation.pk }}-tab">
 
@@ -93,6 +95,7 @@
                                         <medium class="text-muted">{{ reservation.get_state_display }}</medium>
 
                                         <!-- Imagen de las reservas-->
+                                    <div>
                                         {% if reservation.space.image %}
                                             <img src=" {% static reservation.space.image.url %}" class="img-fluid"
 
@@ -102,6 +105,7 @@
                                                  src="{% static 'img/items/default_article.jpg' %}"
                                                  alt="Card image cap">
                                         {% endif %}
+                                    </div>
 
 
                                         <p>{{ reservation.space.description }}</p>
@@ -131,17 +135,23 @@
                                             </div>
                                         </div>
 
+                                        <div>
+                                            <form id="article_post_{{ reservation.space.id }}" method="post" action="{% url 'reserve_sheet' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="article_id" value="{{ reservation.space.id }}">
+                                                <input class="btn" style="background-color: #78bbb4; color: white" type="submit" value="Ver más detalles de la reserva">
+                                            </form>
                                         </div>
 
                                         </div>
-                                    </div>
-                                  </div>
+
                                 {% endfor %}
-                                </div>
+
 
                                 </div>
                             </div>
-
+                                    </div>
+                        </div>
                         </div>
                     {% else %}
                         <p>No se han realizado reservas</p>
@@ -163,11 +173,11 @@
 
                                             <!-- Tener seleccionado la primera casilla por default-->
 
-                                            <a class="nav-link {% if forloop.counter0 == 0 %} active {% endif %}
+                                            <a class="nav-link {% if forloop.first %} active {% endif %}
                                          d-flex justify-content-between align-items-center"
                                                id="v-pills-{{ loan.pk }}-tab" data-toggle="pill"
                                                href="#v-pills-{{ loan.pk }}"
-                                               role="tab" aria-controls="v-pills-{{ loan.pk }}" aria-selected="false">
+                                               role="tab" aria-controls="v-pills-{{ loan.pk }}" aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">
                                                 {{ loan.article.name }} <span
                                                     class="badge badge-pill badge-light">{{ loan.get_state_display }}</span></a>
                                         {% endfor %}
@@ -182,8 +192,7 @@
 
                                                 {% for loan in loans %}
 
-                                                    <div class="tab-pane fade show {% if forloop.counter0 == 0 %}
-                                                    active {% endif %}"
+                                                    <div class="tab-pane fade {% if forloop.first %} show active {% endif %}"
                                                          id="v-pills-{{ loan.pk }}"
                                                          role="tabpanel"
                                                          aria-labelledby="v-pills-{{ loan.pk }}-tab">
@@ -196,17 +205,17 @@
                                                         <medium class="text-muted">{{ loan.get_state_display }}</medium>
 
                                                         <!-- Imagen de los préstamos-->
+                                                    <div>
                                                         {% if loan.article.image %}
                                                             <img src=" {% static loan.article.image.url %}"
                                                                  class="img-fluid"
-                                                                 alt="Foto"
-                                                                 style="height: 900px"/>
+                                                                 alt="Foto"/>
                                                         {% else %}
                                                             <img class="card-img-top img-fluid"
                                                                  src="{% static 'img/items/default_article.jpg' %}"
                                                                  alt="Card image cap">
                                                         {% endif %}
-
+                                                    </div>
                                                         <p>{{ loan.article.description }}</p>
 
                                                         <div class="reservation-timeline">
@@ -256,6 +265,4 @@
 
         </div>
 
-    </div>
-    </div>
 {% endblock %}
