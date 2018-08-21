@@ -142,7 +142,7 @@
         endPseudoTime = parseInt(endTime.data("pseudo-time"))
 
         if (startPseudoTime < endPseudoTime){
-            endTime.val(el.data("time"))
+            endTime.val(el.data("time-end"))
             paintCells(el, startPseudoTime, endPseudoTime)
         } else {
             selectStartTime(el)
