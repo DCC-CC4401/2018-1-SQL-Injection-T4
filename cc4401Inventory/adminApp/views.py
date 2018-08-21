@@ -195,7 +195,7 @@ def queryCalendarData(current_week):
         reserv.append('/article/'+ str(r.id))
         res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
     return res_list
-
+    
 def queryLoans(request):
     actual_date = datetime.now(tz=pytz.utc)
     try:
@@ -206,7 +206,7 @@ def queryLoans(request):
                     'starting_date_time')
             elif request.GET["filter"] == 'caducados':
                 loans = Loan.objects.filter(ending_date_time__lt=actual_date,
-                                            article__state='P').order_by(
+                                            ).order_by(
                     'starting_date_time')
             elif request.GET["filter"] == 'perdidos':
                 loans = Loan.objects.filter(ending_date_time__lt=actual_date,
