@@ -52,18 +52,22 @@ def article_data(request, article_id):
 def verificar_horario_habil(init, end, article_id):
 	if init.hour < 9 or (end.hour == 18 and end.minute > 0) or end.hour > 18:
 		return False
-	if Loan.objects.filter(starting_date_time__lte=init,
-	                              ending_date_time__gte=init, article=article_id):
-		return False
 
-	if Loan.objects.filter(starting_date_time__gte=init,
-	                                  ending_date_time__lte=end, article=article_id):
-		return False
 
 	if init.weekday() > 4: # fin de semana
 		return False
 
 	return True
+
+def verificar_no_esta_pedido(init, end, article_id):
+    if Loan.objects.filter(starting_date_time__lte=init,
+                           ending_date_time__gte=init, article=article_id):
+        return False
+
+    if Loan.objects.filter(starting_date_time__gte=init,
+                           ending_date_time__lte=end, article=article_id):
+        return False
+    return True
 
 @login_required
 def article_request(request):
@@ -85,6 +89,8 @@ def article_request(request):
                     messages.warning(request, 'Los pedidos deben ser devueltos el mismo día que se entregan.')
                 elif not verificar_horario_habil(start_date_time, end_date_time, article.id):
                     messages.warning(request, 'Los pedidos deben ser hechos en horario hábil.')
+                elif not verificar_no_esta_pedido(start_date_time, end_date_time, article.id):
+                    messages.warning(request, 'El objeto ya está pedido para ese horario.')
                 else:
                     loan = Loan(article=article, starting_date_time=start_date_time, ending_date_time=end_date_time,
                                 user=request.user)
