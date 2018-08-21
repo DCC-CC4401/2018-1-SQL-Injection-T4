@@ -113,36 +113,24 @@
 
                                         <p>{{ reservation.space.description }}</p>
 
-                                        <div class="reservation-timeline">
-                                            <div class="container_timeline right">
-                                                <div class="content">
-                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                        en proceso
-                                                    </p>
-                                                </div>
-                                            </div>
+                                        <p class="text-info">Reserva solicitada por <br> {{ reservation.user.first_name }} {{ reservation.user.last_name }}</p>
 
-                                            <div class="container_timeline right">
-                                                <div class="content">
-                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                        en Enviado
-                                                    </p>
-                                                </div>
+                                        <br>
+                                        {% if reservation.state == 'P' %}
+                                        <div class="row align-items-center">
+                                            <div class="col-md-5"></div>
+                                            <div class="col-md-2">
+                                                <form method="post" action="{% url 'delete_reservation' %}">
+                                                    {% csrf_token %}
+                                                    <input class="d-none" id="reservation-{{ reservation.id }}" name="reservation" value="{{ reservation.id }}">
+                                                    <input class="delete-button text-white" type="submit" value="Cancelar Reserva">
+                                                </form>
                                             </div>
-
-                                            <div class="container_timeline right">
-                                                <div class="content">
-                                                    <p><strong>{{ reservation.starting_date_time }}</strong> Solicitud
-                                                        enviada</p>
-                                                </div>
-                                            </div>
+                                            <div class="col-md-5"></div>
                                         </div>
-
-                                        </div>
-
+                                        {% endif %}
+                                    </div>
                                 {% endfor %}
-
-
                                 </div>
                             </div>
                                     </div>
@@ -213,33 +201,30 @@
                                                     </div>
                                                         <p>{{ loan.article.description }}</p>
 
-                                                        <div class="reservation-timeline">
-                                                            <div class="container_timeline right">
-                                                                <div class="content">
-                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
-                                                                        Solicitud en
-                                                                        proceso
-                                                                    </p>
+                                                        <br>
+                                                        <p class="text-info">Préstamo solicitado por <br> {{ loan.user.first_name }} {{ loan.user.last_name }}</p>
+                                                        <br>
+                                                        {% if loan.state == 'A' %}
+                                                            {% if loan.article.state == 'L' %}
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-md-4"></div>
+                                                                    <div class="col-md-4 bg-danger text-white rounded text-center">Artículo perdido</div>
+                                                                    <div class="col-md-4"></div>
                                                                 </div>
-                                                            </div>
-
-                                                            <div class="container_timeline right">
-                                                                <div class="content">
-                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
-                                                                        Solicitud en
-                                                                        Enviado
-                                                                    </p>
+                                                            {% else %}
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-md-4"></div>
+                                                                    <div class="col-md-4">
+                                                                        <form method="post" action="{% url 'lost_article' %}">
+                                                                            {% csrf_token %}
+                                                                            <input class="d-none" id="loan-{{ loan.id }}" name="loan" value="{{ loan.id }}">
+                                                                            <input class="delete-button text-white" type="submit" value="Reportar Pérdida">
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="col-md-4"></div>
                                                                 </div>
-                                                            </div>
-
-                                                            <div class="container_timeline right">
-                                                                <div class="content">
-                                                                    <p><strong>{{ loan.starting_date_time }}</strong>
-                                                                        Solicitud
-                                                                        enviada</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                            {% endif %}
+                                                        {% endif %}
 
                                                     </div>
                                                 {% endfor %}
