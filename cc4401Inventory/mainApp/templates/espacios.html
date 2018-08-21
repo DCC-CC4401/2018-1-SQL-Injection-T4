@@ -31,7 +31,7 @@ Sistema de Reserva CEI - Ver Espacios
     </div>
     <div class="container">
         {% include '_schedule_landing_filtered.html' %}
-            <form method="post" id="reservation-form" action="{% url 'space_request' %}">
+            <form method="post" id="reservation-form" action="{% url 'space_request_select' %}">
                 {% csrf_token %}
                 <div class="row">
                     <div class="row">
