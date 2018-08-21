@@ -109,9 +109,8 @@ def verificar_horario_habil(init, end, space_id):
 
 def verificar_espacio_quincho(init, end, name):
 	now = datetime.datetime.now()
-	before24 = init - timedelta(hours=24)
 	if re.search('quincho', name, re.IGNORECASE):
-		return now < before24 
+		return init - now >= timedelta(hours=24)
 	return True
 	
 
