@@ -9,7 +9,8 @@ import datetime
 from django.utils.timezone import localtime
 
 
-import random, os
+
+import random, os, re
 import pytz
 from django.contrib import messages
 
@@ -105,6 +106,15 @@ def verificar_horario_habil(init, end, space_id):
 	return True
 
 
+def verificar_espacio_quincho(init, end, name):
+	now = datetime.datetime.now()
+	before24 = init - timedelta(hours=24)
+	if re.search('quincho', name, re.IGNORECASE):
+		return now < before24 
+	return True
+	
+
+
 def space_request(request, space_id):
 	if request.method == 'POST' and 'picked-date' in request.POST:
 		space = Space.objects.get(id=space_id)
@@ -122,15 +132,17 @@ def space_request(request, space_id):
 				if start_date_time > end_date_time:
 					messages.warning(request,
 					                 'La reserva debe terminar después de iniciar.')
-				elif start_date_time - datetime.datetime.now() < timedelta(hours=1):
+				elif (start_date_time - datetime.datetime.now() < timedelta(hours=1)) and (not re.search('quincho', space.name, re.IGNORECASE)):
 					messages.warning(request,
-					                 'Los pedidos deben ser hechos al menos con una hora de anticipación.')
+					                 'Los pedidos (menos el Quincho) deben ser hechos al menos con una hora de anticipación.')
 				elif start_date_time.date() != end_date_time.date():
 					messages.warning(request,
 					                 'Los pedidos deben ser devueltos el mismo día que se entregan.')
 				elif not verificar_horario_habil(start_date_time, end_date_time, space_id):
 					messages.warning(request,
 					                 'Los pedidos deben ser hechos en horario hábil.')
+				elif not verificar_espacio_quincho(start_date_time, end_date_time, space.name):
+					messages.warning(request, 'El quincho debe reservarse 24 antes.')
 				else:
 					reservation = Reservation(space=space,
 					                          starting_date_time=start_date_time,
@@ -227,3 +239,4 @@ def space_edit_capacity(request, space_id):
 		a.save()
 
 	return redirect('/space/' + str(space_id) + '/edit')
+
