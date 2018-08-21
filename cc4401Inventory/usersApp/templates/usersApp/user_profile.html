@@ -60,18 +60,18 @@
                                  aria-orientation="vertical">
 
                                     {% for reservation in reservations %}
-                                        <div class="form-check nav-link {% if forloop.first %} active {% endif %}
-                                         d-flex justify-content-between align-items-center" id="v-pills-{{ reservation.pk }}-tab" data-toggle="pill"
-                                           href="#v-pills-{{ reservation.pk }}" role="tab" aria-controls="v-pills-{{ reservation.pk }}"
-                                           aria-selected="{% if forloop.first %} true {% else %} false {% endif %}" style="cursor: pointer; padding-left: 1.5rem;">
+                                        <div class="form-check nav-link {% if forloop.first %} active {% endif %} d-flex justify-content-between align-items-center" style="cursor: pointer;">
                                             <!-- Casilla solo en los pendientes -->
                                             {% if reservation.state == 'P' %}
-                                            <input class="form-check-input" type="radio" id="reservation-{{ reservation.id }}" name="reservation" value="{{ reservation.id }}">
+                                            <input class="form-check-input" type="checkbox" id="reservation-{{ reservation.id }}" name="reservation" value="{{ reservation.id }}" style="margin-left: 0px;">
                                             {% endif %}
-                                            <label class="form-check-label" for="reservation-{{ reservation.id }}">
-                                            {{ reservation.space.name }}
-                                            </label>
-                                            <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
+                                            <a class="form-check-label" {% if reservation.state == 'P' %} for="reservation-{{ reservation.id }}" {% endif %}
+                                               id="v-pills-{{ reservation.pk }}-tab" data-toggle="pill"
+                                               href="#v-pills-{{ reservation.pk }}" role="tab" aria-controls="v-pills-{{ reservation.pk }}"
+                                               aria-selected="{% if forloop.first %} true {% else %} false {% endif %}" style="text-decoration: none; margin-left: 1.5rem;">
+                                                {{ reservation.space.name }}
+                                                <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
+                                            </a>
                                         </div>
                                     {% endfor %}
                             </div>
@@ -218,13 +218,17 @@
             </div>
 
         </div>
-
     <script type="text/javascript">
     $( document ).ready(function() {
-        $('input[type=radio]').click(function() {
-            let checkbox = $(this);
-            console.log(checkbox.prop("checked"));
-            $(this).prop("checked", !checkbox.prop("checked"));
+        function removeActive() {
+            $('.form-check').each(function () {
+                $(this).removeClass("active");
+            });
+        }
+
+        $('.form-check').click(function() {
+            removeActive();
+            $(this).addClass("active");
         });
     });
     </script>
