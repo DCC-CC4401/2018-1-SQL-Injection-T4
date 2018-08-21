@@ -90,6 +90,10 @@ def space_data(request, space_id, date=None):
 def verificar_horario_habil(init, end, space_id):
 	if init.hour < 9 or end.hour > 18:
 		return False
+
+	if init.date.isocalendar()[2] > 5:
+		return False
+
 	if Reservation.objects.filter(starting_date_time__lte=init,
 	                              ending_date_time__gte=init, space=space_id)\
 			.exclude(state='R'):
