@@ -200,6 +200,28 @@
                                                         <p>{{ loan.article.description }}</p>
                                                         <br>
                                                         <p class="text-info">Préstamo solicitado por <br> {{ loan.user.first_name }} {{ loan.user.last_name }}</p>
+                                                        <br>
+                                                        {% if loan.state == 'A' %}
+                                                            {% if loan.article.state == 'L' %}
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-md-4"></div>
+                                                                    <div class="col-md-4 bg-danger text-white rounded text-center">Artículo perdido</div>
+                                                                    <div class="col-md-4"></div>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-md-4"></div>
+                                                                    <div class="col-md-4">
+                                                                        <form method="post" action="{% url 'lost_article' %}">
+                                                                            {% csrf_token %}
+                                                                            <input class="d-none" id="loan-{{ loan.id }}" name="loan" value="{{ loan.id }}">
+                                                                            <input class="delete-button text-white" type="submit" value="Reportar Pérdida">
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="col-md-4"></div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endif %}
                                                     </div>
                                                 {% endfor %}
 
