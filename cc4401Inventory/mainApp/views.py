@@ -15,7 +15,8 @@ def landing_articles(request):
 
 
 @login_required
-def landing_spaces(request, date=None):
+def landing_spaces(request, date=None, filtered=[]):
+    spaces_list = Space.objects.all()
     if date:
         current_date = date
         current_week = datetime.datetime.strptime(current_date, "%Y-%m-%d").date().isocalendar()[1]
@@ -27,39 +28,26 @@ def landing_spaces(request, date=None):
             current_week = datetime.date.today().isocalendar()[1]
             current_date = datetime.date.today().strftime("%Y-%m-%d")
 
-    reservations = Reservation.objects.filter(starting_date_time__week=current_week, state__in=['P', 'A'])
+    if not filtered:
+        reservations = Reservation.objects.filter(starting_date_time__week=current_week, state__in=['P', 'A'])
+
+    else:
+        reservations = Reservation.objects.filter(starting_date_time__week=current_week, state__in=['P', 'A'],
+                                                  space__name__in=filtered)
+
     colores = {'A': 'rgba(0,153,0,0.7)',
                'P': 'rgba(51,51,204,0.7)'}
 
-    try:
-        select_spaces = []
-        for space in Space.objects.all():
-            select_spaces.append(request.POST[space.name])
-        res_list = []
-        for i in range(5):
-            res_list.append(list())
-        for r in reservations:
-            if r.space.name in select_spaces:
-                reserv = []
-                reserv.append(r.space.name)
-                reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
-                reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
-                reserv.append(colores[r.state])
-                res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
-    except:
-        select_spaces = []
-        for space in Space.objects.all():
-            select_spaces.append(space.name)
-        res_list = []
-        for i in range(5):
-            res_list.append(list())
-        for r in reservations:
-            reserv = []
-            reserv.append(r.space.name)
-            reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
-            reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
-            reserv.append(colores[r.state])
-            res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
+    res_list = []
+    for i in range(5):
+        res_list.append(list())
+    for r in reservations:
+        reserv = []
+        reserv.append(r.space.name)
+        reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
+        reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
+        reserv.append(colores[r.state])
+        res_list[r.starting_date_time.isocalendar()[2] - 1].append(reserv)
 
     move_controls = list()
     move_controls.append(
@@ -77,7 +65,9 @@ def landing_spaces(request, date=None):
     context = {'reservations': res_list,
                'current_date': current_date,
                'controls': move_controls,
-               'actual_monday': monday}
+               'actual_monday': monday,
+               'filtered': filtered,
+               'spaces': spaces_list}
 
     return render(request, 'espacios.html', context)
 
@@ -113,43 +103,28 @@ def search(request):
             articles = articles.filter(id=article_id)
         return landing_search(request, articles)
 
-def space_request_select(request):
-    if request.method == 'POST' and 'picked-date' in request.POST:
-        if request.user.enabled:
-            try:
-                space = Space.objects.get(name=request.POST['space'])
+global_spaces = []
+global_date = ''
 
-                string_inicio = request.POST['picked-date'] + " " + \
-                                request.POST['picked-start-time']
-                start_date_time = datetime.datetime.strptime(string_inicio,
-                                                    '%d/%m/%Y %H:%M')
-                string_fin = request.POST['picked-date'] + " " + request.POST[
-                    'picked-end-time']
-                end_date_time = datetime.datetime.strptime(string_fin, '%d/%m/%Y %H:%M')
+@login_required
+def select_spaces(request):
+    get_date(request)
+    global global_spaces
+    if request.method == "POST":
+        spaces_list = request.POST.getlist('checkbox')
 
-                if start_date_time > end_date_time:
-                    messages.warning(request,
-                                     'La reserva debe terminar después de iniciar.')
-                elif start_date_time - datetime.datetime.now() < timedelta(hours=1):
-                    messages.warning(request,
-                                     'Los pedidos deben ser hechos al menos con una hora de anticipación.')
-                elif start_date_time.date() != end_date_time.date():
-                    messages.warning(request,
-                                     'Los pedidos deben ser devueltos el mismo día que se entregan.')
-                elif not verificar_horario_habil(start_date_time, end_date_time, space_id):
-                    messages.warning(request,
-                                     'Los pedidos deben ser hechos en horario hábil.')
-                else:
-                    reservation = Reservation(space=space,
-                                              starting_date_time=start_date_time,
-                                              ending_date_time=end_date_time,
-                                              user=request.user)
-                    reservation.save()
-                    messages.success(request, 'Pedido realizado con éxito')
-            except Exception as e:
-                print(e)
-                messages.warning(request, 'Ingrese una fecha y hora válida.')
-        else:
-            messages.warning(request, 'Usuario no habilitado para pedir préstamos')
+        global_spaces = spaces_list
 
-    return redirect('landing_spaces')
+        return landing_spaces(request, date=global_date, filtered=global_spaces)
+    else:
+        return landing_spaces(request, date=global_date, filtered=global_spaces)
+
+@login_required
+def get_date(request):
+    global global_date
+    if request.method == "GET":
+        date = request.GET.get('date')
+        global_date = date
+        return global_date
+
+
