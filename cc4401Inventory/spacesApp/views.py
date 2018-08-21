@@ -237,3 +237,4 @@ def space_edit_capacity(request, space_id):
 		a.save()
 
 	return redirect('/space/' + str(space_id) + '/edit')
+
