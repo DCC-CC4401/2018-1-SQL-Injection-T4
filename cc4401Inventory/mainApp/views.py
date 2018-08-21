@@ -5,6 +5,8 @@ from articlesApp.models import Article
 from reservationsApp.models import Reservation
 from django.contrib.auth.decorators import login_required
 
+from spacesApp.models import Space
+
 
 @login_required
 def landing_articles(request):
@@ -84,4 +86,5 @@ def search(request):
 
         products = None if (request.GET['query'] == "") else articles
         return landing_search(request, products)
+
 
