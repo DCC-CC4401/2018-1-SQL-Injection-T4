@@ -60,18 +60,19 @@
                                  aria-orientation="vertical">
 
                                     {% for reservation in reservations %}
-                                        <!-- Casilla solo en los pendientes -->
-                                        {% if reservation.state == 'P' %}
-                                            <input id="reservation-{{ reservation.id }}" name="reservation" class="form-check-input"
-                                                   type="checkbox" value="{{ reservation.id }}">
-                                        {% endif %}
-                                        <a class="nav-link {% if forloop.first %} active {% endif %}
+                                        <div class="form-check nav-link {% if forloop.first %} active {% endif %}
                                          d-flex justify-content-between align-items-center" id="v-pills-{{ reservation.pk }}-tab" data-toggle="pill"
                                            href="#v-pills-{{ reservation.pk }}" role="tab" aria-controls="v-pills-{{ reservation.pk }}"
-                                           aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">
-                                            {{ reservation.space.name }} <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
-                                        </a>
-
+                                           aria-selected="{% if forloop.first %} true {% else %} false {% endif %}" style="cursor: pointer; padding-left: 1.5rem;">
+                                            <!-- Casilla solo en los pendientes -->
+                                            {% if reservation.state == 'P' %}
+                                            <input class="form-check-input" type="radio" id="reservation-{{ reservation.id }}" name="reservation" value="{{ reservation.id }}">
+                                            {% endif %}
+                                            <label class="form-check-label" for="reservation-{{ reservation.id }}">
+                                            {{ reservation.space.name }}
+                                            </label>
+                                            <span class="badge badge-pill badge-light">{{ reservation.get_state_display }}</span>
+                                        </div>
                                     {% endfor %}
                             </div>
                         </form>
@@ -116,8 +117,8 @@
 	                                            <div class="col-md-2">
 	                                                <form method="post" action="{% url 'delete_reservation' %}">
 	                                                    {% csrf_token %}
+	                                                    <input class="d-none" id="reservation-{{ reservation.id }}" name="reservation" value="{{ reservation.id }}">
 	                                                    <input class="delete-button text-white" type="submit" value="Cancelar Reserva">
-	                                                    <input id="reservation-{{ reservation.id }}" name="reservation" class="d-none" value="{{ reservation.id }}">
 	                                                </form>
 	                                            </div>
                                                 <div class="col-md-5"></div>
@@ -218,4 +219,15 @@
 
         </div>
 
+    <script type="text/javascript">
+    $( document ).ready(function() {
+        $('input[type=radio]').click(function() {
+            let checkbox = $(this);
+            console.log(checkbox.prop("checked"));
+            $(this).prop("checked", !checkbox.prop("checked"));
+        });
+    });
+    </script>
 {% endblock %}
+
+
