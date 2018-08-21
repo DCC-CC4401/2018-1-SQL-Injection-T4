@@ -38,25 +38,25 @@
 			<li class="events-group week-day" data-day-num="{{day}}" data-day="{{day|weekDayToDate:actual_monday}}">
 				<div class="top-info"><span>{{day|dayNumberToWeekDay:days.split}}</span></div>
 				<ul>
-					<li data-pseudo-time="0" data-time="09:00"></li>
-					<li data-pseudo-time="1" data-time="09:30"></li>
-					<li data-pseudo-time="2" data-time="10:00"></li>
-					<li data-pseudo-time="3" data-time="10:30"></li>
-					<li data-pseudo-time="4" data-time="11:00"></li>
-					<li data-pseudo-time="5" data-time="11:30"></li>
-					<li data-pseudo-time="6" data-time="12:00"></li>
-					<li data-pseudo-time="7" data-time="12:30"></li>
-					<li data-pseudo-time="8" data-time="13:00"></li>
-					<li data-pseudo-time="9" data-time="13:30"></li>
-					<li data-pseudo-time="10" data-time="14:00"></li>
-					<li data-pseudo-time="11" data-time="14:30"></li>
-					<li data-pseudo-time="12" data-time="15:00"></li>
-					<li data-pseudo-time="13" data-time="15:30"></li>
-					<li data-pseudo-time="14" data-time="16:00"></li>
-					<li data-pseudo-time="15" data-time="16:30"></li>
-					<li data-pseudo-time="16" data-time="17:00"></li>
-					<li data-pseudo-time="17" data-time="17:30"></li>
-					<li data-pseudo-time="18" data-time="18:00"></li>
+					<li data-pseudo-time="0" data-time="09:00" data-time-end="09:30"></li>
+					<li data-pseudo-time="1" data-time="09:30" data-time-end="10:00"></li>
+					<li data-pseudo-time="2" data-time="10:00" data-time-end="10:30"></li>
+					<li data-pseudo-time="3" data-time="10:30" data-time-end="11:00"></li>
+					<li data-pseudo-time="4" data-time="11:00" data-time-end="11:30"></li>
+					<li data-pseudo-time="5" data-time="11:30" data-time-end="12:00"></li>
+					<li data-pseudo-time="6" data-time="12:00" data-time-end="12:30"></li>
+					<li data-pseudo-time="7" data-time="12:30" data-time-end="13:00"></li>
+					<li data-pseudo-time="8" data-time="13:00" data-time-end="13:30"></li>
+					<li data-pseudo-time="9" data-time="13:30" data-time-end="14:00"></li>
+					<li data-pseudo-time="10" data-time="14:00" data-time-end="14:30"></li>
+					<li data-pseudo-time="11" data-time="14:30" data-time-end="15:00"></li>
+					<li data-pseudo-time="12" data-time="15:00" data-time-end="15:30"></li>
+					<li data-pseudo-time="13" data-time="15:30" data-time-end="16:00"></li>
+					<li data-pseudo-time="14" data-time="16:00" data-time-end="16:30"></li>
+					<li data-pseudo-time="15" data-time="16:30" data-time-end="17:00"></li>
+					<li data-pseudo-time="16" data-time="17:00" data-time-end="17:30"></li>
+					<li data-pseudo-time="17" data-time="17:30" data-time-end="18:00"></li>
+					<li data-pseudo-time="18" data-time="18:00" data-time-end="18:30"></li>
 					
 					{% for r in res %}
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
