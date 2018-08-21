@@ -91,9 +91,6 @@ def verificar_horario_habil(init, end, space_id):
 	if init.hour < 9 or end.hour > 18:
 		return False
 
-	if init.date.isocalendar()[2] > 5:
-		return False
-
 	if Reservation.objects.filter(starting_date_time__lte=init,
 	                              ending_date_time__gte=init, space=space_id)\
 			.exclude(state='R'):
@@ -125,6 +122,10 @@ def space_request(request, space_id):
 
 		if request.user.enabled:
 			try:
+				if space.state == 'R':
+					messages.warning(request, 'Sala en reparación, no se puede reservar')
+					return
+
 				string_inicio = request.POST['picked-date'] + " " + \
 				                request.POST['picked-start-time']
 				start_date_time = datetime.datetime.strptime(string_inicio,
