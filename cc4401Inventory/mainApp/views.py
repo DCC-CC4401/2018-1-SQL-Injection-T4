@@ -5,6 +5,8 @@ from articlesApp.models import Article
 from reservationsApp.models import Reservation
 from django.contrib.auth.decorators import login_required
 
+from spacesApp.models import Space
+
 
 @login_required
 def landing_articles(request):
@@ -28,7 +30,6 @@ def landing_spaces(request, date=None):
     reservations = Reservation.objects.filter(starting_date_time__week=current_week, state__in=['P', 'A'])
     colores = {'A': 'rgba(0,153,0,0.7)',
                'P': 'rgba(51,51,204,0.7)'}
-
     res_list = []
     for i in range(5):
         res_list.append(list())

@@ -18,18 +18,129 @@ Sistema de Reserva CEI - Ver Espacios
         </div>
         <div class="col-4"></div>
     </div>
-    <div class="row" style="margin-top: 2em;">
-        <div class="col-6 offset-3 schedule-current-week" style="text-align: center;">
-          <div class="alert alert-info">
-            <p>Estás viendo la semana del lunes <b>{{ actual_monday }}</b></p>
-          </div>
+    <div class="container">
+        <div class="row" style="margin-top: 2em;">
+            <div class="col-6 offset-3 schedule-current-week"
+                 style="text-align: center;">
+                <div class="alert alert-info">
+                    <p>Estás viendo la semana del lunes
+                        <b>{{ actual_monday }}</b></p>
+                </div>
+            </div>
         </div>
     </div>
-    {% include '_schedule_landing_filtered.html' %}
-
+    <div class="container">
+        {% include '_schedule_landing_filtered.html' %}
+            <form method="post" id="reservation-form" action="{% url 'space_request' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="row">
+                        <select class="form-control" id="select_space" name="picked-space">
+                            {% for space in spaces %}
+                                <option> {{space.name}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="padding: 5px">
+                        <label for="picked-date">Fecha</label>
+                        <input class="form-control" name="picked-date"
+                               id="picked-date" type="text" value=""
+                               data-pseudo-time="-1" readonly><br>
+                    </div>
+                    <div class="form-group" style="padding: 5px">
+                        <label for="picked-start-time">Hora inicio</label>
+                        <input class="form-control" name="picked-start-time"
+                               id="picked-start-time" type="text" value=""
+                               data-pseudo-time="-1" readonly><br>
+                    </div>
+                    <div class="form-group" style="padding: 5px">
+                        <label for="picked-end-time">Hora final</label>
+                        <input class="form-control" name="picked-end-time"
+                               id="picked-end-time" type="text" value=""
+                               data-pseudo-time="-1" readonly><br>
+                    </div>
+                </div>
+                <button type="submit" class="btn" value="Hacer Reserva Landing"
+                        onclick="document.getElementById('reservation-form').submit()">
+                    Hacer Reserva
+                </button>
+            </form>
+    </div>
 </div>
 
 
+<script>
+    $(document).ready(function(){
+        // "Lunes","Martes","Miercoles","Jueves","Viernes"
+        $('.week-day li').on('click', function(e){
+            el = $(e.target)
+            selectDate(el)
+        })
+    })
+    function selectDate(el){
+        date = $("#picked-date")
+        weekday = el.closest('.week-day')
+        // console.log(weekday.data("day-num"))
+
+        if (date.val() == ""){
+            selectStartTime(el)
+        } else {
+            if(date.val() == weekday.data('day')){
+                selectEndTime(el)
+            } else {
+                selectStartTime(el)
+            }
+            // date.val(weekday.data('day'))
+        }
+        date.val(weekday.data('day'))
+    }
+
+    function selectStartTime(el){
+        startTime = $("#picked-start-time")
+        startTime.val(el.data("time"))
+
+        startTime.data("pseudo-time", el.data("pseudo-time"))
+
+        // unselect end time data
+        endTime = $("#picked-end-time")
+        endTime.val("")
+        endTime.data("pseudo-time", -1)
+
+        //paint cells
+        startPseudoTime = parseInt(startTime.data("pseudo-time"))
+        paintCells(el, startPseudoTime,  startPseudoTime)
+    }
+
+    function selectEndTime(el){
+        startTime = $("#picked-start-time")
+        endTime = $("#picked-end-time")
+        endTime.data("pseudo-time", el.data("pseudo-time"))
+
+        startPseudoTime = parseInt(startTime.data("pseudo-time"))
+        endPseudoTime = parseInt(endTime.data("pseudo-time"))
+
+        if (startPseudoTime < endPseudoTime){
+            endTime.val(el.data("time"))
+            paintCells(el, startPseudoTime, endPseudoTime)
+        } else {
+            selectStartTime(el)
+        }
+
+    }
+    function paintCells(el, ini, end){
+        clearPaintedCells()
+
+        weekday = el.closest('.week-day')
+        weekday.find("li").filter(function(ind){
+            elTime = parseInt($(this).data("pseudo-time"))
+            return elTime <= end && elTime >= ini
+        }).addClass("bg-primary")
+    }
+
+    function clearPaintedCells(){
+        $('li').removeClass("bg-primary")
+    }
+</script>
 
 {% endblock %}
 
