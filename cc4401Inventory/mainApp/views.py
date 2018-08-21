@@ -31,17 +31,36 @@ def landing_spaces(request, date=None):
     reservations = Reservation.objects.filter(starting_date_time__week = current_week, state__in = ['P','A'])
     colores = {'A': 'rgba(0,153,0,0.7)',
                'P': 'rgba(51,51,204,0.7)'}
-
-    res_list = []
-    for i in range(5):
-        res_list.append(list())
-    for r in reservations:
-        reserv = []
-        reserv.append(r.space.name)
-        reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
-        reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
-        reserv.append(colores[r.state])
-        res_list[r.starting_date_time.isocalendar()[2]-1].append(reserv)
+    try:
+        select_spaces = []
+        for space in Space.objects.all():
+            select_spaces.append(request.POST[space.name])
+        res_list = []
+        for i in range(5):
+            res_list.append(list())
+        for r in reservations:
+            if r.space.name in select_spaces:
+                reserv = []
+                reserv.append(r.space.name)
+                reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
+                reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
+                reserv.append(colores[r.state])
+                res_list[r.starting_date_time.isocalendar()[2]-1].append(reserv)
+    except:
+        select_spaces = []
+        for space in Space.objects.all():
+            select_spaces.append(space.name)
+        res_list = []
+        for i in range(5):
+            res_list.append(list())
+        for r in reservations:
+            if r.space.name in select_spaces:
+                reserv = []
+                reserv.append(r.space.name)
+                reserv.append(localtime(r.starting_date_time).strftime("%H:%M"))
+                reserv.append(localtime(r.ending_date_time).strftime("%H:%M"))
+                reserv.append(colores[r.state])
+                res_list[r.starting_date_time.isocalendar()[2]-1].append(reserv)
 
     move_controls = list()
     move_controls.append((datetime.datetime.strptime(current_date,"%Y-%m-%d")+datetime.timedelta(weeks=-4)).strftime("%Y-%m-%d"))
@@ -86,5 +105,4 @@ def search(request):
 
         products = None if (request.GET['query'] == "") else articles
         return landing_search(request, products)
-
 
