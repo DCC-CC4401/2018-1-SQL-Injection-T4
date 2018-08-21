@@ -86,21 +86,20 @@ def logout_view(request):
 
 @login_required
 def user_data(request):
-	if request.method == 'POST':
-		try:
-			user_id = request.POST.get('u_id')
-			user = User.objects.get(id=user_id)
-			reservations = Reservation.objects.filter(user=user).order_by(
-				'-starting_date_time')[:10]
-			loans = Loan.objects.filter(user=user).order_by(
-				'-starting_date_time')[:10]
-			context = {
-				'user': user,
-				'reservations': reservations,
-				'loans': loans
-			}
-			return render(request, 'usersApp/user_profile.html', context)
-		except Exception:
-			return redirect('/')
-	else:
-		return redirect('login')
+    if request.method == 'POST':
+        try:
+            user_id = request.POST.get('u_id')
+            user = User.objects.get(id=user_id)
+            reservations = Reservation.objects.filter(user=user).order_by('-starting_date_time')[:10]
+            loans = Loan.objects.filter(user=user).order_by('-starting_date_time')[:10]
+            context = {
+                'user': user,
+                'reservations': reservations,
+                'loans': loans
+            }
+            return render(request, 'usersApp/user_profile.html', context)
+        except Exception as e:
+            print("Error:", e)
+            return redirect('/')
+    else:
+        return redirect('login')

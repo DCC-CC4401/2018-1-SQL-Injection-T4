@@ -61,10 +61,13 @@
 
                                     {% for reservation in reservations %}
                                         <!-- Casilla solo en los pendientes -->
+                                        <div>
                                         {% if reservation.state == 'P' %}
-                                            <input id="reservation-{{ reservation.id }}" name="reservation" class="form-check-input"
-                                                   type="checkbox" value="{{ reservation.id }}">
+                                            <input id="reservation-{{ reservation.id }}" name="reservation" class="form-check-input" type="checkbox" value="{{ reservation.id }}">
+                                        {% else %}
+                                            <input type="checkbox" disabled style="display: none">
                                         {% endif %}
+                                        </div>
                                         <a class="nav-link {% if forloop.first %} active {% endif %}
                                          d-flex justify-content-between align-items-center" id="v-pills-{{ reservation.pk }}-tab" data-toggle="pill"
                                            href="#v-pills-{{ reservation.pk }}" role="tab" aria-controls="v-pills-{{ reservation.pk }}"
@@ -133,14 +136,6 @@
                                                         enviada</p>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <form id="article_post_{{ reservation.space.id }}" method="post" action="{% url 'reserve_sheet' %}">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="article_id" value="{{ reservation.space.id }}">
-                                                <input class="btn" style="background-color: #78bbb4; color: white" type="submit" value="Ver más detalles de la reserva">
-                                            </form>
                                         </div>
 
                                         </div>
