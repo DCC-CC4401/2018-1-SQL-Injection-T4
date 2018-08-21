@@ -50,7 +50,7 @@ def article_data(request, article_id):
         return redirect('/')
 
 def verificar_horario_habil(init, end, article_id):
-	if init.hour < 9 or (horario.hour == 18 and horario.minute > 0) or end.hour > 18:
+	if init.hour < 9 or (end.hour == 18 and end.minute > 0) or end.hour > 18:
 		return False
 	if Loan.objects.filter(starting_date_time__lte=init,
 	                              ending_date_time__gte=init, article=article_id):
